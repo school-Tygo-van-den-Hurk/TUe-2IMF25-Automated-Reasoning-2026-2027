@@ -1,0 +1,9 @@
+[package]
+name = "exercise-1"
+version = "0.1.0"
+edition = "2024"
+description = "Six trucks have to deliver obscure building blocks to a magic factory. This checks the satisfiability."
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+z3 = "0.21.0"

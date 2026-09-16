@@ -12,7 +12,7 @@ The practical assignment has to be executed by groups of three persons.
 Registration in groups must be done via Canvas, at the latest on
 **9 September 2026**. After that date, incomplete groups will be merged
 and students who are not in a group will be considered as no longer taking
-part in the course. 
+part in the course.
 
 The results of the assignment has to be described in a report that should be
 submitted as PDF next to the source code of your implementation in a ZIP-file
@@ -21,7 +21,7 @@ information about the course can be found at the course page in Canvas.
 
 ## Report Requirements
 
-The report must be written in $\LATEX$ and have less than 20 pages with a
+The report must be written in $\\LATEX$ and have less than 20 pages with a
 standard page and font size, e.g., Springers `llncs` style or the `article`
 class. Source code of your implementations should be avoided in the main
 part of the report, presenting only small relevant excerpts if necessary for
@@ -75,8 +75,8 @@ Only the following tools or libraries should be used to solve the problems:
 - [OxiDD](https://oxidd.net)
   OxiDD is a modern BDD framework written in Rust, with available APIs for
   Python and C++. Please use the BDDManager (BDDs without complement edges) to
-  solve the assignments. 
-  
+  solve the assignments.
+
 Each of the problems should be solved using one of these tools and assessed
 with current versions linked above
 
