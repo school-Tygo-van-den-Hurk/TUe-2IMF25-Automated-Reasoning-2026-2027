@@ -22,10 +22,9 @@ impl Exercise {
     pub fn a() -> Self {
         let optimizer = Optimize::new();
 
+        let trucks = Truck::z3(&optimizer);
         let products = Product::z3(&optimizer);
         optimizer.maximize(&products[&Dupples]);
-
-        let trucks = Truck::z3(&optimizer);
 
         // only 2 trucks have facilities to house `Skipples`.
         for index in 2..trucks.len() {
@@ -38,11 +37,13 @@ impl Exercise {
         optimizer.assert(&at_least(
             &trucks
                 .iter()
-                .map(|truck| truck.amounts[&Product::Prittles].ge(0))
+                .map(|truck| truck.amounts[&Prittles].ge(1))
                 .collect::<Vec<Bool>>(),
             5,
         ));
 
+        // The total amount of each product being transported it the sum of the
+        // amounts in trucks
         for product in Product::iter() {
             let total_amount = &products[&product];
 

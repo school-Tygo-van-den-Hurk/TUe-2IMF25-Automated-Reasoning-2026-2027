@@ -6,4 +6,6 @@ description = "Six trucks have to deliver obscure building blocks to a magic fac
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
+strum = "0.28.0"
+strum_macros = "0.28.0"
 z3 = "0.21.0"

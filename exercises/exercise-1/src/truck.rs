@@ -24,9 +24,8 @@ impl Truck {
         Self::indexes().fold(Vec::new(), |mut result, index| {
             let name = format!("weight_truck_{index}");
             let weight = Int::new_const(name);
-            optimizer.assert(weight.ge(0));
+            
             let mut calculated = Int::from_u64(0);
-
             let amounts = Product::iter().fold(HashMap::new(), |mut map, product| {
                 let name = format!("total_{product}_truck_{index}");
                 let total = Int::new_const(name);
@@ -36,8 +35,17 @@ impl Truck {
                 map
             });
 
-            optimizer.assert(weight.eq(calculated));
+            // Trucks can carry between 0 and `Truck::MAX_WEIGHT` kilograms
             optimizer.assert(weight.le(Truck::MAX_WEIGHT));
+            optimizer.assert(weight.eq(calculated));
+            optimizer.assert(weight.ge(0));
+
+            // Trucks can carry at most 10 blocks
+            let init = Int::from_u64(0);
+            let iter = amounts.values();
+            let sum = iter.fold(init, |sum, product| sum + product);
+            optimizer.assert(sum.le(10));
+
             result.push(Self { amounts, weight });
             result
         })

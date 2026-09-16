@@ -39,13 +39,13 @@ exercise-1 print b
 
 Six trucks (with rated speed 80km/h) have to deliver obscure building
 blocks to a magic factory. The distance to the factory is 120 km. Every
-truck has a max load of 8000 kg and can fit at most ten building blocks.
+truck has a max load of 8000 kg and can fit at most 10 building blocks.
 In total, the following has to be delivered:
 
-- Six nuzzles, each of weight 800 kg.
-- Twelve prittles, each of weight 405 kg.
-- Fifteen skipples, each of weight 500 kg.
-- Eight crottles, each of weight 2500 kg.
+- 6 nuzzles, each of weight 800 kg.
+- 12 prittles, each of weight 405 kg.
+- 15 skipples, each of weight 500 kg.
+- 8 crottles, each of weight 2500 kg.
 - A number of dupples, each of weight 600 kg.
 
 If more than two types of goods are present in a truck, it has to drive at
