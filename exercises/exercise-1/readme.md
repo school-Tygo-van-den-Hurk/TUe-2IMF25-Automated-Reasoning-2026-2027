@@ -35,6 +35,17 @@ exercise-1 solve a
 exercise-1 print b
 ```
 
+> [!TIP]
+> On unix, a nice way to get the results it by sorting the output:
+>
+> ```Shell
+> ; echo question 1a: && exercise-1 solve a | sort;
+> ; echo question 1b: && exercise-1 solve b | sort;
+> ```
+>
+> This prevents the output from being randomly sorted and makes it easier
+> to read.
+
 ## Assignment
 
 Six trucks (with rated speed 80km/h) have to deliver obscure building
