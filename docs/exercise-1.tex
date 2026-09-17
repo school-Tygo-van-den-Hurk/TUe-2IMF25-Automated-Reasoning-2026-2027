@@ -1,0 +1,250 @@
+\newcommand{\Dupples}{\texttt{Dupples}}
+\newcommand{\Nuzzles}{\texttt{Nuzzles}}
+\newcommand{\Prittles}{\texttt{Prittles}}
+\newcommand{\Skipples}{\texttt{Skipples}}
+\newcommand{\Crottles}{\texttt{Crottles}}
+
+\section{Exercise 1}
+
+    \subsection{Approach}
+
+        I started out by modeling the products first, so I made an enum and
+        gave it properties such as name, weight, and required amount. Then
+        all I had to do was iterate over them and creating variables using
+        the weight and the required amount for each product.
+
+        Next, I started with the trucks. Trucks have a maximum weight they can
+        carry, plus an amount for each product they're carrying. So I added
+        those two fields and made the variables for: the total weight in the
+        truck, the amount of product $p_1$, the amount for product $p_2$, ...
+        
+        To finish the trucks off I just had to assert that the weight is
+        between 0 and the max capacity, and that it is equal to the sum of
+        the weights of the products being transported. And finally the amount
+        of products being transported had to be less the 10.
+
+        The last part was just asserting a couple more global constraints. Like
+        how the total amount of a product being transported is the same as the
+        sum of what the trucks are transporting.
+
+    \subsection{Implementation}
+
+        \subsubsection{constants}
+            \begin{itemize}
+                \item
+                    The amount of trucks as
+                    $\texttt{amount\_of\_trucks} = 6$
+                \item 
+                    The maximum load capacity per truck in kg
+                    $\texttt{max\_weight\_truck} = 8000$
+                \item
+                    The maximum amount of products in a truck
+                    $\texttt{max\_amount\_truck} = 10$
+            \end{itemize}
+
+        \subsubsection{Variables}
+            \begin{itemize}
+                \item
+                    $\alpha_{p,t} \in \mathbb{Z}$ representing the total amount of
+                    a product $p$ being transported in a truck $t$.
+                \item
+                    $\beta_{p} \in \mathbb{Z}$ representing the total amount of a
+                    product $p$ being transported.
+                \item
+                    $\gamma_{t} \in \mathbb{Z}$ representing the total weight a
+                    truck $t$ is transporting.
+            \end{itemize}
+
+        \subsubsection{Sets}
+            \begin{itemize}
+                \item 
+                    The set of products: $P = \big\{
+                        \Dupples,
+                        \Nuzzles,
+                        \Prittles,
+                        \Skipples,
+                        \Crottles
+                    \big\}$.
+                \item 
+                    The set of products that have a required amount: $P_r =
+                        P \setminus \{ \Dupples \}$
+                \item
+                    The set of trucks: $T = \big\{
+                        1, 2, ..., \texttt{amount\_of\_trucks}
+                    \big\}$
+                \item
+                    The set of trucks that can transport \Skipples: $T_s = \big\{
+                        1, 2
+                    \big\}$
+            \end{itemize}
+
+        \subsubsection{Functions}        
+            \begin{itemize}
+                \item 
+                    A function to get the required amount of a product:
+                    \[
+                        r : P_r \to \mathbb{N},\qquad r(p) = \begin{cases}
+                            6  & \text{if } p = Nuzzles  \\
+                            12 & \text{if } p = Prittles \\
+                            15 & \text{if } p = Skipples \\
+                            8  & \text{if } p = Crottles
+                        \end{cases}
+                    \]
+                \item 
+                    A function to get the weight per product:
+                    \[
+                        w : P \to \mathbb{N},\qquad w(p) = \begin{cases}
+                            800  & \text{if } p = Nuzzles  \\
+                            405  & \text{if } p = Prittles \\
+                            500  & \text{if } p = Skipples \\
+                            2500 & \text{if } p = Crottles \\
+                            600  & \text{if } p = Dupples \\
+                        \end{cases}
+                    \]
+            \end{itemize}
+        
+        \subsubsection{Assertions}
+            For the total amount of product $p$ being transported I created the
+            following formulas:
+
+            \begin{itemize}
+                \item 
+                    Asserting that the amount of products being transported are
+                    non-negative:
+                    \[
+                        \bigg(
+                            \bigwedge_{(p, t) \in P \times T} \alpha_{p,t} \ge 0
+                        \bigg) \wedge \bigg(
+                            \bigwedge_{p \in P} \beta_p \ge 0
+                        \bigg)
+                    \]
+                \item
+                    Asserting that the required amount is transported:
+                    \[
+                        \bigwedge_{p \in P_r} \beta_{p} = r(p)
+                    \]
+                \item
+                    Asserting that the weight of a truck is the sum of its
+                    products, and is in a valid range:
+                    \[
+                        \bigwedge_{t \in T} 0 \leq \gamma_{t} = \bigg(
+                            \sum_{p \in P} \Big(
+                                \alpha_{p,t}\cdot w(p)
+                            \Big)
+                        \bigg) \leq \texttt{max\_weight\_truck}
+                    \]
+                \item
+                    asserting a truck $t$ transports at most 10 items:
+                    \[
+                        \bigwedge_{t \in T} \bigg(
+                            \sum_{p \in P} \alpha_{p,t}
+                        \bigg) \leq 10
+                    \]
+                \item
+                    asserting that only some trucks can transport \texttt{Skipples}:
+                    \[
+                        \bigwedge_{t \in T} \bigg(
+                            \big(
+                                t \not\in T_s 
+                            \big) \implies \big(
+                                \alpha_{p,t} = 0
+                            \big)
+                        \bigg) \qquad \text{ where $p$ = \Skipples}
+                    \]
+                \item
+                    asserting the total amount of a product $p$ being transported
+                    is the sum of what the trucks are transporting:
+                    \[
+                        \bigwedge_{p \in P} \bigg(
+                            \beta_p = \Big( \sum_{t \in T} \alpha_{p,t}
+                            \Big)
+                        \bigg)
+                    \]
+                \item 
+                    asserting that \Prittles\text{ } are spread over at least 5 trucks:
+                    \[
+                        \sum_{t \in T} \bigg(
+                            \operatorname{ite}\Big(
+                                \big(\alpha_{p,t} > 0\big),\ 1,\ 0
+                            \Big)
+                        \bigg) \geq 5 \qquad \text{ where p = \Prittles}
+                    \]
+            \end{itemize}
+
+            \noindent The goal is of course to maximise the amount of \Dupples:
+            
+            \[
+                \text{maximize } \beta_p \text{ where $p = \Dupples$}
+            \]
+
+            \noindent For question b there was one more asserting we have to make.
+            Namely, \Crottles cannot be transported without at least 2 \Dupples in
+            the same truck:
+
+            \[
+                \bigwedge_{t \in T} \bigg(
+                    \Big(
+                        \alpha_{p_1,t} > 0
+                    \Big) \implies \Big(
+                        \alpha_{p_2,t} \geq 2
+                    \Big)
+                \bigg) \qquad \text{ where $p_1 = \Crottles$ and $p_2 = \Dupples$}
+            \]
+
+            \noindent I did leave out all mentions of truck speed. I did this on purpose as
+            the driving speed does not affect the amount of \Dupples I can deliver
+            and that would just slow the solver down, and make it harder to
+            implement.
+
+    \subsection{Results}
+
+        The results were that both sub-questions were satisfiable. I've created
+        tables to help visualize the results.
+
+        \subsubsection{Visualisation Exercise 1a}
+
+            \begin{table}[ht]
+                \centering
+                \caption{Distribution of products over the six trucks for sub-question a.}
+                \label{tab:exercise1a}
+                \begin{tabular}{c|ccccc|c}
+                    \textbf{Truck} & \textbf{Nuzzles} & \textbf{Prittles} & 
+                    \textbf{Skipples} & \textbf{Crottles} & \textbf{Dupples} &
+                    \textbf{Weight (kg)} \\
+                    \hline
+                    %%% T | N | P | S | C | D | W
+                        1 & 0 & 1 & 6 & 1 & 2 & 7105 \\
+                        2 & 0 & 0 & 9 & 1 & 0 & 7000 \\
+                        3 & 2 & 2 & 0 & 1 & 5 & 7910 \\
+                        4 & 0 & 1 & 0 & 2 & 4 & 7805 \\
+                        5 & 4 & 4 & 0 & 1 & 1 & 7920 \\
+                        6 & 0 & 4 & 0 & 2 & 2 & 7820 \\
+                    \hline
+                    \textbf{Total} & \textbf{6} & \textbf{12} & \textbf{15} &
+                    \textbf{8} & \textbf{14} & \\
+                \end{tabular}
+            \end{table}
+
+        \subsubsection{Visualisation Exercise 1b}
+
+            \begin{table}[ht]
+                \centering
+                \caption{Distribution of products over the six trucks for sub-question b.}
+                \label{tab:exercise1b}
+                \begin{tabular}{c|ccccc|c}
+                    \textbf{Truck} & \textbf{Nuzzles} & \textbf{Prittles} & 
+                    \textbf{Skipples} & \textbf{Crottles} & \textbf{Dupples} &
+                    \textbf{Weight (kg)} \\
+                    \hline
+                    %%% T | N | P | S | C | D | W
+                        1 & 0 & 1 & 6 & 1 & 2 & 7105 \\
+                        2 & 1 & 0 & 9 & 0 & 0 & 5300 \\
+                        3 & 0 & 4 & 0 & 2 & 2 & 7820 \\
+                        4 & 3 & 3 & 0 & 1 & 3 & 7915 \\
+                        5 & 1 & 2 & 0 & 2 & 2 & 7810 \\
+                        6 & 1 & 2 & 0 & 2 & 2 & 7810 \\
+                    \hline
+                    \textbf{Total} & \textbf{6} & \textbf{12} & \textbf{15} &
+                    \textbf{8} & \textbf{11} & \\
+                \end{tabular}
+            \end{table}
