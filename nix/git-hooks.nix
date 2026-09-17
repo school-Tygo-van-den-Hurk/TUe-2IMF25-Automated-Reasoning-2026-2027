@@ -116,15 +116,9 @@
           "pre-push"
           "manual"
         ];
-        settings = {
-          no-unicode = true;
-          hidden = true;
-          ignored-words = [
-            "Tygo"
-            "tygo"
-            "Hurk"
-            "hurk"
-          ];
+        settings.config = {
+          files.ignore-hidden = false;
+          files.extend-exclude = [ "**/docs/.gitignore" ];
         };
       };
 
