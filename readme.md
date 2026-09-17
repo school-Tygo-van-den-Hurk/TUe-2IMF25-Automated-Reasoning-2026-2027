@@ -21,7 +21,7 @@ information about the course can be found at the course page in Canvas.
 
 ## Report Requirements
 
-The report must be written in $\\LATEX$ and have less than 20 pages with a
+The report must be written in $\LaTeX$ and have less than 20 pages with a
 standard page and font size, e.g., Springers `llncs` style or the `article`
 class. Source code of your implementations should be avoided in the main
 part of the report, presenting only small relevant excerpts if necessary for
@@ -68,11 +68,12 @@ obtain a 5.5.
 
 Only the following tools or libraries should be used to solve the problems:
 
-- [Z3](https://github.com/Z3Prover/z3) or [Yices](http://yices.csl.sri.com/)
+- [**Z3**](https://github.com/Z3Prover/z3), or 
+  [**Yices**](http://yices.csl.sri.com/)
   Both Z3 and Yices are programs for satisfiability modulo theories (SMT). They
   accept standard SMT format, in particular boolean SAT format. Z3 provides
   APIs for several popular programming languages, Yices only provides a C API.
-- [OxiDD](https://oxidd.net)
+- [**OxiDD**](https://oxidd.net)
   OxiDD is a modern BDD framework written in Rust, with available APIs for
   Python and C++. Please use the BDDManager (BDDs without complement edges) to
   solve the assignments.
@@ -82,7 +83,9 @@ with current versions linked above
 
 ## Use of AI
 
-Use of (generative) AI is allowed for obtaining general knowledge, but not for directly solving
-the given problems or translating code to formulas. Your report is required to include a
-statement on whether you used AI, and, if so, how. The general guidelines from the TU/e
-can be found [here](https://assets.w3.tue.nl/w/fileadmin/Education_Guide/Content/Programs/Testing%20and%20assessment/AI%20Rules_TUe.pdf).
+Use of (generative) AI is allowed for obtaining general knowledge, but not for
+directly solving the given problems or translating code to formulas. Your
+report is required to include a statement on whether you used AI, and, if so,
+how. The general guidelines from the TU/e can be found [here][tue/ai].
+
+[tue/ai]: https://assets.w3.tue.nl/w/fileadmin/Education_Guide/Content/Programs/Testing%20and%20assessment/AI%20Rules_TUe.pdf

@@ -48,6 +48,7 @@
     "tygo",
     "typst",
     "Typst",
-    "UNSAT"
+    "UNSAT",
+    "Yices"
   ]
 }
