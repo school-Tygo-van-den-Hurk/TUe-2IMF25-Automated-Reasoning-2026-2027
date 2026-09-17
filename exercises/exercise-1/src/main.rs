@@ -22,7 +22,7 @@
 //!    over the six trucks.
 //! b. Do the same, with the extra information that crottles get too cold if
 //!    there are less than two dupples in the same truck.
-//! 
+//!
 
 use ::clap::Parser;
 use ::clap::Subcommand;
