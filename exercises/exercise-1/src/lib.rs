@@ -28,20 +28,16 @@ impl Exercise {
         optimizer.maximize(&products[&Dupples]);
 
         // only 2 trucks have facilities to house `Skipples`.
-        for index in 2..trucks.len() {
-            let truck = &trucks[index];
+        for truck in trucks.iter().skip(2) {
             let product = &truck.amounts[&Skipples];
             optimizer.assert(product.eq(0));
         }
 
         // Prittles need to be distributed over at least five trucks.
-        optimizer.assert(&at_least(
-            &trucks
-                .iter()
-                .map(|truck| truck.amounts[&Prittles].ge(1))
-                .collect::<Vec<Bool>>(),
-            5,
-        ));
+        let prittles = trucks.iter().map(|truck| &truck.amounts[&Prittles]);
+        let carries_prittles = prittles.map(|amount| amount.ge(1));
+        let carries_prittles = carries_prittles.collect::<Vec<Bool>>();
+        optimizer.assert(at_least(&carries_prittles, 5));
 
         // The total amount of each product being transported it the sum of the
         // amounts in trucks

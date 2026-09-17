@@ -92,7 +92,7 @@ fn print(exercise: Exercise) {
     let mut smt2 = String::from(";> [!WARNING]");
     smt2.push_str(";> This is probably not complete and for debug purposes only!\n");
     smt2.push_str(";> I wrote this quickly to debug, **DO NOT RUN AS IS**.\n");
-    smt2.push_str("\n");
+    smt2.push('\n');
 
     for assertion in exercise.optimizer.get_assertions() {
         smt2.push_str(&format!("(assert {})\n", assertion));
