@@ -2,6 +2,7 @@
   perSystem =
     {
       config,
+      self',
       pkgs,
       ...
     }:
@@ -10,18 +11,17 @@
 
       formatters = builtins.attrValues config.treefmt.build.programs;
       hooks = config.pre-commit.settings.enabledPackages;
-      packages = with pkgs; [
-        (python3.withPackages (pythonPackages: with pythonPackages; [
-          z3-solver matplotlib pytest sympy numpy pandas networkx ipython
-        ])) # an interpreter for Python batteries included
-        act # Run your GitHub Actions locally
-        git # Distributed version control system
-        stdenv.cc # A C compiler, used by rustc
+      packages = with self'.packages; [
         rust-analyzer # For Rust IDE integration
+        texliveFull # Compile latex documents into PDFs
+        python3 # an interpreter for Python batteries included
         rustfmt # Format Rust Code
         clippy # Lint Rust Code
         rustc # Compile Rust Code
         cargo # The main part of the rust toolchain
+        act # Run your GitHub Actions locally
+        git # Distributed version control system
+        cc # A C compiler, used by rustc
         z3 # A SAT solver needed for the assignment
       ];
 
