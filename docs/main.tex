@@ -1,0 +1,79 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{orcidlink}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    showstringspaces=false
+}
+
+\title{
+    \textbf{2IMF25 Automated Reasoning}\\
+    \large Practical Assignment
+}
+
+\author{
+    Tygo van den Hurk \orcidlink{0009-0003-4182-5076} (1705709) \\
+    \texttt{t.j.f.h.v.d.hurk@student.tue.nl}
+    \and
+    Bram Boomen (???????) \\
+    \texttt{b.boomen@student.tue.nl}
+    \and
+    Librecht Kuijvenhoven (???????) \\
+    \texttt{l.kuijvenhoven@student.tue.nl}
+}
+
+\date{
+    Group: 66\\
+    \today
+}
+
+\begin{document}
+    \maketitle
+
+    \begin{abstract}
+        In this course, we study a number of techniques and algorithms,
+        including satisfiability for propositional (Boolean) logic,
+        satisfiability modulo theories (SMT), binary decision diagrams (BDDs),
+        model checking, and first-order logic. The course covers both the
+        underlying algorithms and solving real-world problems using the tools
+        that implement those algorithms.
+    \end{abstract}
+
+    \input{exercise-1}
+    \input{exercise-2}
+    \input{exercise-3}
+    \input{exercise-4}
+    \input{exercise-5}
+    \input{exercise-6}
+    \input{exercise-7}
+    \input{bibliography}
+    \input{appendix}
+
+\end{document}
