@@ -45,11 +45,11 @@
         \subsubsection{Variables}
             \begin{itemize}
                 \item
-                    $\alpha_{p,t} \in \mathbb{Z}$ representing the total amount of
-                    a product $p$ being transported in a truck $t$.
+                    $\alpha_{p,t} \in \mathbb{Z}$ representing the total amount
+                    of a product $p$ being transported in a truck $t$.
                 \item
-                    $\beta_{p} \in \mathbb{Z}$ representing the total amount of a
-                    product $p$ being transported.
+                    $\beta_{p} \in \mathbb{Z}$ representing the total amount of
+                    a product $p$ being transported.
                 \item
                     $\gamma_{t} \in \mathbb{Z}$ representing the total weight a
                     truck $t$ is transporting.
@@ -66,16 +66,15 @@
                         \Crottles
                     \big\}$.
                 \item 
-                    The set of products that have a required amount: $P_r =
-                        P \setminus \{ \Dupples \}$
+                    The set of products that have a required amount: 
+                    $P_r = P \setminus \{ \Dupples \}$
                 \item
                     The set of trucks: $T = \big\{
                         1, 2, ..., \texttt{amount\_of\_trucks}
                     \big\}$
                 \item
-                    The set of trucks that can transport \Skipples: $T_s = \big\{
-                        1, 2
-                    \big\}$
+                    The set of trucks that can transport \Skipples:
+                    $T_s = \big\{ 1, 2 \big\}$
             \end{itemize}
 
         \subsubsection{Functions}        
@@ -113,7 +112,8 @@
                     non-negative:
                     \[
                         \bigg(
-                            \bigwedge_{(p, t) \in P \times T} \alpha_{p,t} \ge 0
+                            \bigwedge_{(p, t) \in P \times T} 
+                                \alpha_{p,t} \ge 0
                         \bigg) \wedge \bigg(
                             \bigwedge_{p \in P} \beta_p \ge 0
                         \bigg)
@@ -141,7 +141,8 @@
                         \bigg) \leq 10
                     \]
                 \item
-                    asserting that only some trucks can transport \texttt{Skipples}:
+                    asserting that only some trucks can transport
+                    \texttt{Skipples}:
                     \[
                         \bigwedge_{t \in T} \bigg(
                             \big(
@@ -152,8 +153,8 @@
                         \bigg) \qquad \text{ where $p$ = \Skipples}
                     \]
                 \item
-                    asserting the total amount of a product $p$ being transported
-                    is the sum of what the trucks are transporting:
+                    asserting the total amount of a product $p$ being
+                    transported is the sum of what the trucks are transporting:
                     \[
                         \bigwedge_{p \in P} \bigg(
                             \beta_p = \Big( \sum_{t \in T} \alpha_{p,t}
@@ -161,7 +162,8 @@
                         \bigg)
                     \]
                 \item 
-                    asserting that \Prittles\text{ } are spread over at least 5 trucks:
+                    asserting that \Prittles\text{ } are spread over at least
+                    5 trucks:
                     \[
                         \sum_{t \in T} \bigg(
                             \operatorname{ite}\Big(
@@ -177,9 +179,9 @@
                 \text{maximize } \beta_p \text{ where $p = \Dupples$}
             \]
 
-            \noindent For question b there was one more asserting we have to make.
-            Namely, \Crottles cannot be transported without at least 2 \Dupples in
-            the same truck:
+            \noindent For question b there was one more asserting we have to
+            make. Namely, \Crottles cannot be transported without at least 2
+            \Dupples\text{ } in the same truck:
 
             \[
                 \bigwedge_{t \in T} \bigg(
@@ -188,13 +190,15 @@
                     \Big) \implies \Big(
                         \alpha_{p_2,t} \geq 2
                     \Big)
-                \bigg) \qquad \text{ where $p_1 = \Crottles$ and $p_2 = \Dupples$}
+                \bigg) \qquad 
+                    \text{ where $p_1 = \Crottles$}
+                    \text{ and $p_2 = \Dupples$}
             \]
 
-            \noindent I did leave out all mentions of truck speed. I did this on purpose as
-            the driving speed does not affect the amount of \Dupples I can deliver
-            and that would just slow the solver down, and make it harder to
-            implement.
+            \noindent I did leave out all mentions of truck speed. I did this
+            on purpose as the driving speed does not affect the amount of
+            \Dupples\text{ } I can deliver and that would just slow the solver
+            down, and make it harder to implement.
 
     \subsection{Results}
 
@@ -205,7 +209,7 @@
 
             \begin{table}[ht]
                 \centering
-                \caption{Distribution of products over the six trucks for sub-question a.}
+                \caption{Distribution of products over the trucks for 1a.}
                 \label{tab:exercise1a}
                 \begin{tabular}{c|ccccc|c}
                     \textbf{Truck} & \textbf{Nuzzles} & \textbf{Prittles} & 
@@ -229,7 +233,7 @@
 
             \begin{table}[ht]
                 \centering
-                \caption{Distribution of products over the six trucks for sub-question b.}
+                \caption{Distribution of products over the trucks for 1b.}
                 \label{tab:exercise1b}
                 \begin{tabular}{c|ccccc|c}
                     \textbf{Truck} & \textbf{Nuzzles} & \textbf{Prittles} & 
