@@ -25,7 +25,7 @@ impl Truck {
         Self::indexes().fold(Vec::new(), |mut result, index| {
             let name = format!("weight_truck_{index}");
             let weight = Int::new_const(name);
-            
+
             let mut calculated = Int::from_u64(0);
             let amounts = Product::iter().fold(HashMap::new(), |mut map, product| {
                 let name = format!("total_{product}_truck_{index}");

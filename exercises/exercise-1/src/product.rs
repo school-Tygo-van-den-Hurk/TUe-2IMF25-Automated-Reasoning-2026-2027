@@ -1,9 +1,9 @@
 use ::std::collections::HashMap;
 use ::std::fmt;
-use ::z3::Optimize;
-use ::z3::ast::Int;
 use ::strum::IntoEnumIterator;
 use ::strum_macros::EnumIter;
+use ::z3::Optimize;
+use ::z3::ast::Int;
 
 /// The weight per `Dupple` in kilograms.
 pub static WEIGHT_PER_DUPPLES: i32 = 600;

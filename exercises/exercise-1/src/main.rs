@@ -11,13 +11,18 @@
 //! - Eight crottles, each of weight 2500 kg.
 //! - A number of dupples, each of weight 600 kg.
 //!
-//! If more than two types of goods are present in a truck, it has to drive a a reduced speed
-//! of 60 km/h to lower the risk of magic interactions between the goods. Skipples are round and
-//! elastic, only two out of the six trucks have facilities for fastening them. Prittles are somewhat
-//! valuable: those pallets need to be distributed over at least five trucks.
+//! If more than two types of goods are present in a truck, it has to drive at
+//! a reduced speed of 60 km/h to lower the risk of magic interactions between
+//! the goods. Skipples are round and elastic, only two out of the six trucks
+//! have facilities for fastening them. Prittles are somewhat valuable: those
+//! pallets need to be distributed over at least five trucks.
 //!
-//! a. Investigate what is the maximum number of dupples that can be delivered in a single
-//!    run, and show how for that number all goods may be divided over the six trucks.
+//! a. Investigate what is the maximum number of dupples that can be delivered
+//!    in a single run, and show how for that number all goods may be divided
+//!    over the six trucks.
+//! b. Do the same, with the extra information that crottles get too cold if
+//!    there are less than two dupples in the same truck.
+//! 
 
 use ::clap::Parser;
 use ::clap::Subcommand;
@@ -88,7 +93,7 @@ fn print(exercise: Exercise) {
     smt2.push_str(";> This is probably not complete and for debug purposes only!\n");
     smt2.push_str(";> I wrote this quickly to debug, **DO NOT RUN AS IS**.\n");
     smt2.push_str("\n");
-    
+
     for assertion in exercise.optimizer.get_assertions() {
         smt2.push_str(&format!("(assert {})\n", assertion));
     }
@@ -143,9 +148,9 @@ fn main() {
             SubQuestion::A => print(Exercise::a()),
             SubQuestion::B => print(Exercise::b()),
             SubQuestion::Both => {
-                print!("question a: ");
+                println!("question a: ");
                 print(Exercise::a());
-                print!("question b: ");
+                println!("question b: ");
                 print(Exercise::b());
             }
         },
