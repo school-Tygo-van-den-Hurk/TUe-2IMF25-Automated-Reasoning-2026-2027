@@ -4,6 +4,7 @@ pub mod truck;
 use ::std::collections::HashMap;
 use ::std::iter::FusedIterator;
 use ::z3::Optimize;
+use ::z3::ast::Ast;
 use ::z3::ast::Bool;
 use ::z3::ast::Int;
 use ::z3::ast::atleast as at_least;
@@ -54,7 +55,8 @@ impl Exercise {
                 sum + product_amount
             });
 
-            optimizer.assert(total_amount.eq(sum_amounts_trucks));
+            let simplified = sum_amounts_trucks.simplify();
+            optimizer.assert(total_amount.eq(simplified));
         }
 
         Self {

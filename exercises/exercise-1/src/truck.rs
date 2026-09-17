@@ -1,6 +1,7 @@
 use crate::product::Product;
 use ::std::collections::HashMap;
 use ::z3::Optimize;
+use ::z3::ast::Ast;
 use ::z3::ast::Int;
 
 #[derive(PartialEq, Eq, Debug)]
@@ -37,13 +38,14 @@ impl Truck {
 
             // Trucks can carry between 0 and `Truck::MAX_WEIGHT` kilograms
             optimizer.assert(weight.le(Truck::MAX_WEIGHT));
-            optimizer.assert(weight.eq(calculated));
+            optimizer.assert(weight.eq(calculated.simplify()));
             optimizer.assert(weight.ge(0));
 
             // Trucks can carry at most 10 blocks
             let init = Int::from_u64(0);
             let iter = amounts.values();
             let sum = iter.fold(init, |sum, product| sum + product);
+            let sum = sum.simplify();
             optimizer.assert(sum.le(10));
 
             result.push(Self { amounts, weight });
