@@ -16,6 +16,9 @@
       inherit (pkgs) act;
       inherit (pkgs) git;
       inherit (pkgs) z3;
+      inherit (pkgs) gnumake;
+      inherit (pkgs) cmake;
+      inherit (pkgs) gdb;
 
       python3 = pkgs.python3.withPackages (
         pythonPackages: with pythonPackages; [

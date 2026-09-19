@@ -23,6 +23,9 @@
         git # Distributed version control system
         cc # A C compiler, used by rustc
         z3 # A SAT solver needed for the assignment
+        gnumake # Build C++ Code
+        cmake # Build C++ Code
+        gdb # C++ Debugger
       ];
 
       buildInputs = packages ++ formatters ++ hooks;
