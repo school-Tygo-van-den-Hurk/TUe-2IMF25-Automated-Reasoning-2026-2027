@@ -1,0 +1,287 @@
+\section{Exercise 3: Food Supply}
+
+    \subsection{Approach}
+
+        When I started I did not know how I was supposed to solve this. I could
+        not see a way to dynamically run more steps in z3. The trick is to
+        realize you do not need to. You can dynamically build a solver for $1,
+        2, ... n$ until you find what you're looking for. When I figured that
+        out it wasn't that hard anymore.
+        
+        I then created a lot of util functions and types to make implementing
+        the assertions easier. When I didn't really knew how to implement the
+        code I went back to the report to instead do it as logic formulas.
+        This was easier to implement then code because of the lack of overhead
+        of those very types.
+
+        When the logic was finished in the report, it was then really easy to
+        implement the same assertions as code using those helper types.
+    \subsection{Implementation}
+        
+        \subsubsection{constants}
+            \begin{itemize}
+                \item truck capacity
+                    $\texttt{trucks\_max\_capacity} = \begin{cases}
+                        130 & \text{for sub-question a } \\
+                        150 & \text{for sub-question b } \\
+                    \end{cases}$
+                \item The max steps to emulate:
+                    \texttt{max\_steps}
+            \end{itemize}
+
+        \subsubsection{Variables}
+            \begin{itemize}
+                \item
+                    $\mathit{f}_{s,v} \in \mathbb{Z}$ representing the food left in
+                    village $v$, at step $s$.
+                \item
+                    $\beta_{s} \in \mathbb{Z}$ representing the food in the
+                    truck at step $s$.
+                \item
+                    $\mathit{t}_{s} \in \mathbb{Z}$ representing the total
+                    time passed at step $s$.
+                \item
+                    $\ell_{s,l} \in \mathbb{B}$ representing whether the
+                    truck is at location $l$ on step $s$.
+            \end{itemize}
+
+        \subsubsection{Sets}
+            \begin{itemize}
+                \item 
+                    The set of villages: $V = \big\{ A, B, C \big\}$.
+                \item 
+                    The set of supplies: $W = \big\{ S \big\}$.
+                \item
+                    The set of locations: $L = V \cup W$
+                \item
+                    The set of routes: $R = \big\{
+                        (A, B), (B, A),
+                        (A, S), (S, A),
+                        (A, C), (C, A),
+                        (B, C), (C, B),
+                        (C, S), (S, C)
+                    \big\}$
+                \item
+                    The set of steps: $\mathbb{S} = \big\{
+                        1, 2, ..., \texttt{ max\_steps}
+                    \big\}$
+                \item
+                    The set of linked steps: $\mathbb{S}_t = \big\{
+                        (1, 2), (2, 3), ..., 
+                        (\texttt{ max\_steps} - 1,\texttt{ max\_steps})
+                    \big\}$
+            \end{itemize}
+
+        \subsubsection{Functions}        
+            \begin{itemize}
+                \item 
+                    A function the capacity of a village $v$:
+                    \[
+                        c : V \to \mathbb{N},\qquad c(v) = \begin{cases}
+                            90  & \text{if } v = A \\
+                            120 & \text{if } v = B \\
+                            90  & \text{if } v = C
+                        \end{cases}
+                    \]
+                \item 
+                    A function to get the distance between two locations:
+                    \[
+                        d : R \to \mathbb{N},\qquad d(r) = \begin{cases}
+                            15 & \text{if } r \in \big\{
+                                (A, S), (S, A), (C, S), (S, C)
+                            \big\} \\
+                            17 & \text{if } r \in \big\{
+                                (A, B), (B, A)
+                            \big\}  \\
+                            13 & \text{if } r = (B, C) \\
+                            9 & \text{if } r = (C, B) \\
+                            12 & \text{if } r \in \big\{
+                                (A, C), (C, A)
+                            \big\}  \\
+                            1 & \text{if } r \in \big\{
+                                (S, S), (A, A), (B, B), (C, C)
+                            \big\} \\
+                        \end{cases}
+                    \]
+                    note that the distance to the same place is $1$. This is
+                    done on purpose. This allows you to "travel" to the same
+                    place in $1$ time unit. Effectively allowing you to wait.
+            \end{itemize}
+    
+        \subsubsection{Assertions}
+            \begin{itemize}
+                \item 
+                    Asserting that a village at any step has a valid amount of food:
+                    \[
+                        \bigwedge_{(s, v) \in \mathbb{S} \times V} \bigg(
+                            0 < \mathit{f}_{s,v} \le c(v)
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that the truck at any step has a valid amount of food:
+                    \[
+                        \bigwedge_{s \in \mathbb{S}} \bigg(
+                            0 < \beta_{s} \le \texttt{trucks\_max\_capacity}
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that the truck must be at exactly one location:
+                    \[
+                        \bigwedge_{s \in \mathbb{S}} \bigg(
+                            1 = \sum_{l \in L} \Big(
+                                \operatorname{ite}\big(
+                                    \ell_{s,l},\ 1,\ 0
+                                \big)
+                            \Big)
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that you can only travel routes:
+                    \[
+                        \bigwedge_{\substack{
+                            (s_1, s_2) \in \mathbb{S}_t \\
+                            (l_1, l_2) \in L \times L
+                        }} \bigg(
+                            \Big( 
+                                    \ell_{s_1,l_1}
+                                \wedge
+                                    (l_1, l_2) \not \in R
+                            \Big) \implies \neg \ell_{s_2,l_2}
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that time passes as you travel:
+                    \[
+                        \bigwedge_{\substack{
+                            (s_1, s_2) \in \mathbb{S}_t \\
+                            (l_1, l_2) = r \in R
+                        }} \bigg(
+                            \Big( 
+                                \ell_{s_1,l_1} \wedge \ell_{s_2,l_2}
+                            \Big) \implies \Big( 
+                                \mathit{t}_{s_2} = \mathit{t}_{s_1} + d(r)
+                            \Big)
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that the truck is refilled at a supply:
+                    \[
+                        \bigwedge_{\substack{
+                            s \in \mathbb{S} \\
+                            l \in W
+                        }} \bigg(
+                            \ell_{s,l} \implies \beta_{s} = \texttt{trucks\_max\_capacity}
+                        \bigg)
+                    \]
+                \item 
+                    Asserting that the food goes down as time passes, but if
+                    the truck is at that location, that location may refill.
+                    \[
+                        \bigwedge_{\substack{
+                            (s_1,s_2) \in \mathbb{S}_t \\
+                            v \in V
+                        }}
+                        \left(
+                            \mathit{f}_{s_2,v}
+                            =
+                            \mathit{f}_{s_1,v}
+                            -
+                            \Delta_\mathit{t}
+                            +
+                            \operatorname{ite}\big(
+                                \ell_{s_2,v}, 
+                                \Delta_\beta, 
+                                0
+                            \big)
+                        \right)
+                        \qquad \text{ where } 
+                            \Delta_\mathit{t} = \mathit{t}_{s_2} - \mathit{t}_{s_1}
+                            \text{ and }
+                            \Delta_\beta = \beta_{s_1} - \beta_{s_2}
+                    \]
+                \item 
+                    Asserting the starting state, all villages are full, and so is the truck:
+                    \[
+                        \beta_{s} = \texttt{trucks\_max\_capacity}    
+                        \wedge 
+                        \left(
+                            \bigwedge_{\substack{
+                                v \in V
+                            }} \mathit{f}_{s,v} = c(v)
+                        \right)
+                        \qquad \text{ where } 
+                            s = 0
+                    \]
+                \item 
+                    Asserting that food in the truck can not go up on village tiles:
+                    \[
+                        \bigwedge_{\substack{
+                            (s_1, s_2) \in \mathbb{S}_t \\
+                            l \in L
+                        }}\left(
+                            \ell_{s_2,l} \wedge l \not\in W \implies \beta_{s_2} \le \beta_{s_1}
+                        \right)
+                    \]
+            \end{itemize}
+
+        \noindent For sub-question A we just wish to prove that we cannot keep these
+        satisfying all these constraints. So we keep increasing the amount of steps
+        until there is no way to satisfy them.
+
+        For sub-question B we also wish to prove that we can keep going
+        forever. We are going to do this by proving there is some order of steps
+        such that we get to the exact same state again. Proving that we can keep
+        going forever. For that I've made the following assertion:
+        \[
+            \left(
+                \bigvee_{\substack{
+                    (s_1, s_2) \in \mathbb{S} \times \mathbb{S}
+                }}
+                % is not the same time
+                s_1 \not = s_2 
+                % Truck has same amount of food
+                \wedge \beta_{s_1} = \beta_{s_2}
+                % Truck is in same location
+                \wedge \left(
+                    \bigwedge_{\substack{
+                        l \in L
+                    }} \ell_{s_1,l} = \ell_{s_1,l}
+                \right)
+                % all villages have the same amount of food as before
+                \wedge \left(
+                    \bigwedge_{\substack{
+                        v \in V
+                    }} f_{s_1,v} = f_{s_2,v}
+                \right)
+            \right)
+        \]
+
+    \subsection{Results}
+
+        \subsubsection{Visualisation Exercise 3a}
+
+            This was UNSAT.
+
+        \subsubsection{Visualisation Exercise 3b}
+
+            \begin{table}[h]
+                \centering
+                \label{tab:exercise3b}
+                \begin{tabular}{cc|ccccc}
+                    \textbf{$s$} & \textbf{$t_s$} & \textbf{$F_{A,s}$} &
+                    \textbf{$F_{B,s}$} & \textbf{$F_{C,s}$} & \textbf{$\beta_s$} &
+                    \textbf{$\ell_{s,?}$} \\
+                    \hline
+                    0 & 0   & 60 & 60  & 60 & 150 & S \\
+                    1 & 15  & 67 & 45  & 45 & 128 & A \\ \rowcolor{gray!15}
+                    2 & 30  & 52 & 30  & 30 & 150 & S \\
+                    3 & 45  & 37 & 15  & 16 & 149 & C \\
+                    4 & 54  & 28 & 100 & 7  & 55  & B \\
+                    5 & 67  & 15 & 87  & 39 & 10  & C \\
+                    6 & 82  & 0  & 72  & 24 & 150 & S \\
+                    7 & 97  & 79 & 57  & 9  & 56  & A \\
+                    8 & 109 & 67 & 45  & 45 & 8   & C \\ \rowcolor{gray!15}
+                    9 & 124 & 52 & 30  & 30 & 150 & S \\
+                \end{tabular}
+                \caption{The steps and the results for 3b proving perpetual looping.}
+            \end{table}
