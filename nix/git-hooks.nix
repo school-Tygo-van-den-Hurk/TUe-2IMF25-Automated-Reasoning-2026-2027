@@ -9,6 +9,11 @@
     settings.enable = true;
     settings.hooks = {
 
+      # Format C and C++ code.
+      clang-format = {
+        enable = true;
+      };
+
       # Run health checks on your flake-powered Nix projects.
       flake-checker = {
         enable = true;
@@ -128,17 +133,6 @@
         stages = [
           "pre-push"
           "pre-commit"
-          "manual"
-        ];
-      };
-
-      # Checks markdown files for broken links, and bad syntax.
-      mdformat = {
-        enable = true;
-        stages = [
-          "pre-commit"
-          "commit-msg"
-          "pre-push"
           "manual"
         ];
       };
