@@ -6,6 +6,42 @@ theories (SMT), binary decision diagrams (BDDs), model checking, and
 first-order logic. The course covers both the underlying algorithms and solving
 real-world problems using the tools that implement those algorithms.
 
+## Tools and Libraries
+
+Only the following tools or libraries should be used to solve the problems:
+
+- [**Z3**](https://github.com/Z3Prover/z3), or
+  [**Yices**](http://yices.csl.sri.com/)
+  Both Z3 and Yices are programs for satisfiability modulo theories (SMT). They
+  accept standard SMT format, in particular boolean SAT format. Z3 provides
+  APIs for several popular programming languages, Yices only provides a C API.
+- [**OxiDD**](https://oxidd.net)
+  OxiDD is a modern BDD framework written in Rust, with available APIs for
+  Python and C++. Please use the BDDManager (BDDs without complement edges) to
+  solve the assignments.
+
+Each of the problems should be solved using one of these tools and assessed
+with current versions linked above
+
+> [!TIP]
+> You can use [Nix](https://nixos.org/) for obtaining the dependencies/tools
+> or to just compile and run the solvers with one command.
+>
+> <details><summary>Download all dependencies and tools.</summary>
+>
+> ```Shell
+> nix --experimental-features "nix-command flakes" develop
+> ```
+>
+> </details>
+> <details><summary>Compile and execute exercises interactively.</summary>
+>
+> ```Shell
+> nix --experimental-features "nix-command flakes" run
+> ```
+>
+> </details>
+
 ## Organizational Information
 
 The practical assignment has to be executed by groups of three persons.
@@ -63,23 +99,6 @@ the desired style is provided on Canvas.
 The calculation of the grade from the number of points scored is not fixed in
 advance, so solving half the tasks perfectly does not necessarily mean you
 obtain a 5.5.
-
-## Tools and Libraries
-
-Only the following tools or libraries should be used to solve the problems:
-
-- [**Z3**](https://github.com/Z3Prover/z3), or
-  [**Yices**](http://yices.csl.sri.com/)
-  Both Z3 and Yices are programs for satisfiability modulo theories (SMT). They
-  accept standard SMT format, in particular boolean SAT format. Z3 provides
-  APIs for several popular programming languages, Yices only provides a C API.
-- [**OxiDD**](https://oxidd.net)
-  OxiDD is a modern BDD framework written in Rust, with available APIs for
-  Python and C++. Please use the BDDManager (BDDs without complement edges) to
-  solve the assignments.
-
-Each of the problems should be solved using one of these tools and assessed
-with current versions linked above
 
 ## Use of AI
 
