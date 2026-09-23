@@ -1,5 +1,38 @@
 # Food Supply
 
+## How to Run
+
+You can use cargo to compile and run the code as follows:
+
+```Shell
+cargo run
+# or compile and then add to path for:
+exercise-3
+```
+
+There are 3 subcommands you can use:
+
+- `solve`: Solve the model, and print the results. For a this means find what
+  model is UNSAT. Print all SAT models. for `b` this means find a SAT model,
+  and print the satisfying assignment.
+- `check`: Similar to solve, but doesn't print the final model.
+- `print`: Prints the model in SMT2 format.
+
+You can also view a particular sub-question only. For example to check
+only question 3a:
+
+```Shell
+exercise-3 check a
+```
+
+These are the two parameters you can combine. Some more examples:
+
+```Shell
+exercise-3 check both
+exercise-3 solve a
+exercise-3 print b
+```
+
 ## Assignment
 
 Three non-self-supporting villages $A$, $B$, and $C$ consume one food package
@@ -46,6 +79,9 @@ the villages be kept alive at best?
 
 Show that this is possible if the capacity of the truck is increased to 150
 food packages. What is the shortest possible driving schedule for the truck
-to sustain the villages indefinitely? Hint: a finite graph contains an infinite
-path starting in a node $v$ if and only if there is a path from $v$ to a node
-$w$ for which there is a non-empty path from $w$ to itself.
+to sustain the villages indefinitely?
+
+> [!TIP]
+> a finite graph contains an infinite path starting in a node $v$ if and only
+> if there is a path from $v$ to a node $w$ for which there is a non-empty path
+> from $w$ to itself.
