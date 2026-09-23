@@ -132,11 +132,6 @@ fn solve(sub_question: SubQuestion, from: usize) {
             let exercise = exercise::A::smt(max_step);
             result = exercise.solver.check();
             println!("a@{max_step:04}) step {max_step} is {result:?}");
-            if let Some(model) = exercise.solver.get_model() {
-                for line in model.to_string().lines().sorted() {
-                    println!("a@{max_step:04})  {line}")
-                }
-            }
         }
     }
 

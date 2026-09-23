@@ -3,9 +3,9 @@
 //! check if a location is a village:
 //!
 //! ```
-//! # use exercise_3::loc::supplies::Village;
+//! # use exercise_3::loc::village::Village;
 //! # use exercise_3::loc::Location;
-//! assert!(Location::A.is_supply);
+//! assert!(Location::A.is_village());
 //!
 //! for village in Village::iter() {
 //!     let location: Location;

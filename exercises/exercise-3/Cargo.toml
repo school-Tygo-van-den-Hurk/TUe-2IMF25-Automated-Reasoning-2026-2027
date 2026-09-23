@@ -2,6 +2,14 @@
 name = "exercise-3"
 version = "0.1.0"
 edition = "2024"
+description = """
+Three non-self-supporting villages $A$, $B$, and $C$ consume one food package
+each per time unit. The required food packages are delivered by a truck. Which
+has to pick up its food packages at location S containing an unbounded supply.
+Show that it is impossible to deliver food packages in such a way that each of
+the villages consumes one food package per time unit forever. For how long can
+the villages be kept alive at best?
+"""
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }

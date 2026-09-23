@@ -16,7 +16,7 @@
 //! }
 //! ```
 
-pub(self) mod consts;
+mod consts;
 pub mod route;
 pub mod supplies;
 pub mod village;
@@ -88,7 +88,7 @@ impl fmt::Display for Location {
     }
 }
 
-pub(self) trait LocationTupleDistance {
+trait LocationTupleDistance {
     fn distance(&self) -> Option<u64>;
 }
 

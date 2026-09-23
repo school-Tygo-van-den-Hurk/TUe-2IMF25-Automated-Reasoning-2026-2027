@@ -5,7 +5,7 @@
 //! ```
 //! # use exercise_3::loc::supplies::Supply;
 //! # use exercise_3::loc::Location;
-//! assert!(Location::S.is_supply);
+//! assert!(Location::S.is_supply());
 //!
 //! for supply in Supply::iter() {
 //!     let location: Location;
@@ -32,6 +32,11 @@ impl Supply {
     /// Returns the name of the supply.
     pub fn name(&self) -> String {
         format!("{self}")
+    }
+
+    /// Iterates over all enum options.
+    pub fn iter() -> impl Iterator<Item = Self> {
+        <Self as IntoEnumIterator>::iter()
     }
 
     /// The amount of supplies that exist.

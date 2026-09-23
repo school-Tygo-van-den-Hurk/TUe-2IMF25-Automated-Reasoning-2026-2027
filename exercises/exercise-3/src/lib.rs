@@ -4,8 +4,6 @@
 pub mod loc;
 pub mod prelude;
 
-use strum::IntoEnumIterator;
-
 use crate::loc::Location;
 use crate::loc::Route;
 use crate::loc::Supply;
@@ -114,7 +112,7 @@ pub trait Question3 {
                 match start.distance_to(&end) {
                     Some(_) => {}
                     None => {
-                        let not_is_at_end = Bool::not(&is_at_end);
+                        let not_is_at_end = Bool::not(is_at_end);
                         solver.assert(is_at_start.implies(&not_is_at_end));
                     }
                 }
@@ -130,8 +128,8 @@ pub trait Question3 {
     /// Assert that time increases based on the distance you travel.
     fn assert_time_passes_as_you_travel(
         solver: &Solver,
-        time: &Vec<Int>,
-        locations: &Vec<HashMap<Location, Bool>>,
+        time: &[Int],
+        locations: &[HashMap<Location, Bool>],
     ) {
         assert!(time.len() == locations.len());
         let max_steps = locations.len();
@@ -152,8 +150,8 @@ pub trait Question3 {
     /// Assert that trucks are refilled at supplies.
     fn assert_trucks_refill_at_supplies(
         solver: &Solver,
-        truck_capacities: &Vec<Int>,
-        locations: &Vec<HashMap<Location, Bool>>,
+        truck_capacities: &[Int],
+        locations: &[HashMap<Location, Bool>],
     ) {
         assert!(truck_capacities.len() == locations.len());
         let max_steps = locations.len();
@@ -172,10 +170,10 @@ pub trait Question3 {
     /// refilled by the truck passing.
     fn assert_food_changes(
         solver: &Solver,
-        truck_capacities: &Vec<Int>,
-        times: &Vec<Int>,
-        locations: &Vec<HashMap<Location, Bool>>,
-        village_capacities: &Vec<HashMap<Village, Int>>,
+        truck_capacities: &[Int],
+        times: &[Int],
+        locations: &[HashMap<Location, Bool>],
+        village_capacities: &[HashMap<Village, Int>],
     ) {
         assert!(truck_capacities.len() == locations.len());
         assert!(truck_capacities.len() == village_capacities.len());
@@ -202,8 +200,8 @@ pub trait Question3 {
 
     fn assert_food_in_truck_cannot_go_up_in_villages(
         solver: &Solver,
-        truck_capacities: &Vec<Int>,
-        locations: &Vec<HashMap<Location, Bool>>,
+        truck_capacities: &[Int],
+        locations: &[HashMap<Location, Bool>],
     ) {
         assert!(truck_capacities.len() == locations.len());
         let max_steps = locations.len();
