@@ -12,6 +12,10 @@
       # Format C and C++ code.
       clang-format = {
         enable = true;
+        types_or = [
+          "c"
+          "c++"
+        ];
       };
 
       # Run health checks on your flake-powered Nix projects.
