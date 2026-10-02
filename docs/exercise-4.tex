@@ -1,0 +1,217 @@
+\section{Exercise 4}
+We are given a snippet of \texttt{c} code. Given that $k \in \{0..10\}$, we need to show that the program can crash or not.
+
+\subsection{Solution}
+We identify multiple parameters for the problem
+\begin{itemize}
+\item $q$ the iteration bound. We set this to the maximum amount the loop would be able to iterate which is 40.
+\item $a_i \in \mathbb{N}$ the value of the $a$ variable of the $i$th iteration
+\item $b_i \in \mathbb{N}$ the value of the $b$ variable of the $i$th iteration
+\item $k \in \{0..10\}$ the constant added to the last \verb|if| statement.
+\end{itemize}
+
+The begin of the snippet defines $a$ and $b$ to 1. Which we encode as 
+\[
+a_0 = 1 \wedge b_0 = 1
+\]
+
+Encoding each iterations we have bound it to $q$. Leading to the formula.
+\begin{equation} \label{eq:e4-2}
+\bigwedge_{1 \le i \le q} F
+\end{equation}
+where $F$ is the formula of the iteration body.
+
+Since $q$ is the maximum number of iterations not all runs need 40 iterations. Therefore we guard the formula with the condition of the while loop:
+\begin{equation}
+\big( \  a_{i-1} < 180 \Rightarrow F) \big) \wedge 
+\big( \ a_{i-1} \geq 180 \Rightarrow ( b_i = b_{i-1} \wedge a_i = a_{i-1} )\big)
+\end{equation}
+where $F$ is the formula of the iteration body.
+
+Encoding the case \verb|__nondet__()| returns true we get
+\[
+(b_i = b_{i-1} + 3 \wedge a_i = a_{i-1} + 2 * b_i )
+\]
+Encoding the case where \verb|__nondet__()| returns false we get
+\[
+(b_i = b_{i-1} + a_{i-1} \wedge a_i = a_{i-1} + 5 )
+\]
+
+Encoding a \verb|if-then-else| statement normally would result in the form $(c \Rightarrow F_1) \wedge (\neg c \Rightarrow F_2)$.
+Since the condition is non deterministic we cannot encode the condition that way, we treat it as either case is correct, therefore we encode it as $F_1 \vee F_2$.
+\begin{equation} \label{eq:e4-1}
+(b_i = b_{i-1} + 3 \wedge a_i = a_{i-1} + 2 * b_i ) \vee
+(b_i = b_{i-1} + a_{i-1} \wedge a_i = a_{i-1} + 5 )
+\end{equation}
+
+
+Normally for program correctness you would prove \texttt{UNSAT} for $\neg Q$.
+But in this case we are trying to verify than no trace could lead to the condition resulting in true.
+So we would prove \texttt{UNSAT} for $Q$. This results in.
+\[
+b_q = 190 + k
+\]
+
+Combining all the components together we get the formula:
+\begin{equation}
+\begin{split}
+	& a_0 = 1 \wedge b_0 = 1 \\
+	& \bigg(\bigwedge_{1 \le i \le q}  \\
+		& \quad \big( \  a_{i-1} < 180 \Rightarrow 
+			( b_i = b_{i-1} + 3 \wedge a_i = a_{i-1} + 2 * b_i ) \vee
+			( b_i = b_{i-1} + a_{i-1} \wedge a_i = a_{i-1} + 5 )
+		\big) \wedge \\ 
+		& \quad \big( \ a_{i-1} \geq 180 \Rightarrow 
+			( b_i = b_{i-1} \wedge a_i = a_{i-1} )
+		\big) \\
+	& \bigg) \wedge b_q = 190 + k
+\end{split}
+\end{equation}
+
+The program builds the formula and for each value for $k$ it checks the formula.
+
+\subsection{Results}
+For each K the program returns \texttt{SAT}, meaning the program can crash, or \texttt{UNSAT}, meaning the program cannot crash. 
+\begin{table}[H]
+\centering
+\caption{Result of Satisfiability}
+\label{tab:exercise4}
+\begin{tabular}{c|l}
+	\textbf{K} & \textbf{Result} \\
+    \hline
+    %%% T | N | P | S | C | D | W
+	0  & Program can not crash.  \\
+	1  & Program can crash.  \\
+	2  & Program can not crash.  \\
+	3  & Program can crash.  \\
+	4  & Program can not crash.  \\
+	5  & Program can crash.  \\
+	6  & Program can crash.  \\
+	7  & Program can crash.  \\
+	8  & Program can not crash.  \\
+	9  & Program can not crash.  \\
+	10 & Program can not crash.  \\
+\end{tabular}
+\end{table}
+Per \texttt{k} that can crash we show the values of \texttt{a}, \texttt{b}  and what \verb|__nondet__()| returned.
+The trace is given until the loop would exit.
+The formula would carry the value over across the rest of the iterations. These traces can be seen in the Table~\ref{tab:exercise4-traces}
+
+
+\begin{table}[htbp]
+
+\caption{Traces}
+\label{tab:exercise4-traces}
+\def\false{ \texttt{False} }
+\def\true{\text{True}}
+	\def\tabletitle #1{\multicolumn{4}{c}{\cellcolor{black}\color{white}#1}}
+\centering
+\begin{tabular}{cc}
+
+	\begin{tabular}[t]{|rrrr|}
+	\hline
+		\tabletitle{Trace for k = 1} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline
+		0 	  & 1         & 1         & - \\
+		1 	  & 6         & 2         & \false \\
+		2 	  & 16        & 5         & \true \\
+		3 	  & 32        & 8         & \true \\
+		4 	  & 54        & 11        & \true \\
+		5 	  & 59        & 65        & \false\\
+		6 	  & 64        & 124       & \false \\
+		7 	  & 69        & 188       & \false \\
+		8 	  & 451       & 191       & \true \\
+		9 	  & 451       & 191       & - \\
+		\multicolumn{4}{|c|}{Left out for brevity} \\
+	\hline
+	\end{tabular}
+	&
+	\begin{tabular}[t]{|rrrr|}
+	\hline
+		\tabletitle{Trace for k = 3} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline
+		0  	  & 1    & 1   & -\\
+		1  	  & 6    & 2   & \false \\
+		2  	  & 11   & 8   & \false \\
+		3  	  & 16   & 19  & \false \\
+		4  	  & 21   & 35  & \false \\
+		5  	  & 26   & 56  & \false \\
+		6  	  & 31   & 82  & \false \\
+		7  	  & 36   & 113 & \false \\
+		8  	  & 41   & 149 & \false \\
+		9  	  & 46   & 190 & \false \\
+		10 	  & 432  & 193 & \true \\
+		11 	  & 432  & 193 & - \\
+		\multicolumn{4}{|c|}{Left out for brevity} \\
+	\hline
+	\end{tabular}
+	\\
+	\begin{tabular}[t]{|rrrr|}
+	\hline
+		\tabletitle{Trace for k = 5} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline
+		0  	  & 1   & 1    & -\\
+		1  	  & 9   & 4    & \true \\
+		2  	  & 14  & 13   & \false \\
+		3  	  & 46  & 16   & \true \\
+		4  	  & 84  & 19   & \true \\
+		5  	  & 89  & 103  & \false \\
+		6  	  & 94  & 192  & \false \\
+		7  	  & 484 & 195  & \true \\
+		8  	  & 484 & 195  & - \\
+		\multicolumn{4}{|c|}{Left out for brevity} \\
+	\hline
+	\end{tabular}
+	& 
+	\begin{tabular}[t]{|rrrr|}
+	\hline
+		\tabletitle{Trace for k = 6} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline
+		0  	  & 1   & 1    & -\\
+		1  	  & 9   & 4    & \true \\
+		2  	  & 14  & 13   & \false \\
+		3  	  & 19  & 27   & \false \\
+		4  	  & 79  & 30   & \true \\
+		5  	  & 84  & 109  & \false \\
+		6  	  & 89  & 193  & \false \\
+		7  	  & 481 & 196  & \true \\
+		8  	  & 481 & 196  & - \\
+		\multicolumn{4}{|c|}{Left out for brevity} \\
+	\hline
+	\end{tabular}
+
+	\\
+
+	\begin{tabular}[t]{|rrrr|}
+	\hline
+		\tabletitle{Trace for k = 7} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline
+		0  	  & 1 & 1      & -\\
+		1  	  & 6 & 2      & \false \\
+		2  	  & 11 & 8     & \false \\
+		3  	  & 16 & 19    & \false \\
+		4  	  & 60 & 22    & \true \\
+		5  	  & 110 & 25   & \true \\
+		6  	  & 166 & 28   & \true \\
+		7  	  & 171 & 194  & \false \\
+		8  	  & 565 & 197  & \true \\
+		9  	  & 565 & 197  & - \\
+		\multicolumn{4}{|c|}{Left out for brevity} \\
+	\hline
+	\end{tabular}
+	&\\
+\end{tabular}
+\end{table}
+
+\subsection{Remarks}
+For the formula we have bound $q$ to be 40, which is the maximum amount of iterations the loop would be able to make. This does lead to the formula to maybe bigger than it needs.
