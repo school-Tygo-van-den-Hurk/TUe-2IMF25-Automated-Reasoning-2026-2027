@@ -28,6 +28,7 @@ use ::clap::Parser;
 use ::clap::Subcommand;
 use ::clap::ValueEnum;
 use ::exercise_1::Exercise;
+use ::itertools::Itertools;
 
 #[derive(Debug, Default, Clone, ValueEnum)]
 enum SubQuestion {
@@ -113,8 +114,12 @@ fn solve(exercise: Exercise) {
         ::z3::SatResult::Unsat => println!("UNSAT"),
         ::z3::SatResult::Unknown => println!("Unknown SatResult"),
         ::z3::SatResult::Sat => match exercise.optimizer.get_model() {
-            Some(model) => println!("{model:?}"),
             None => panic!("Unknown fatal error: SAT but no such model?"),
+            Some(model) => {
+                for line in model.to_string().lines().sorted() {
+                    println!("{line}");
+                }
+            }
         },
     }
 }
