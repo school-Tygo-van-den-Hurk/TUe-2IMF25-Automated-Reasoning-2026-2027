@@ -1,4 +1,9 @@
 {
   "unwantedRecommendations": [],
-  "recommendations": ["streetsidesoftware.code-spell-checker"]
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker-dutch",
+    "streetsidesoftware.code-spell-checker",
+    "rust-lang.rust-analyzer",
+    "jnoortheen.nix-ide"
+  ]
 }
