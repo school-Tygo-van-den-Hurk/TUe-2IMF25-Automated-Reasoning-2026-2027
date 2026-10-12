@@ -23,7 +23,7 @@ impl Truck {
 
     pub fn z3(optimizer: &Optimize) -> Vec<Truck> {
         Self::indexes().fold(Vec::new(), |mut result, index| {
-            let name = format!("weight_truck_{index}");
+            let name = format!("total_weight_truck_{index}");
             let weight = Int::new_const(name);
 
             let mut calculated = Int::from_u64(0);
