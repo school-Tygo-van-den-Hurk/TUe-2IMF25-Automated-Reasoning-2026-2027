@@ -4,6 +4,9 @@
     "streetsidesoftware.code-spell-checker-dutch",
     "streetsidesoftware.code-spell-checker",
     "rust-lang.rust-analyzer",
-    "jnoortheen.nix-ide"
+    "jnoortheen.nix-ide",
+    "ms-python.debugpy",
+    "ms-python.python",
+    "ms-python.pylint"
   ]
 }

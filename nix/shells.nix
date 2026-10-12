@@ -14,21 +14,26 @@
       packages = with self'.packages; [
         rust-analyzer # For Rust IDE integration
         texliveFull # Compile latex documents into PDFs
-        python3 # an interpreter for Python batteries included
         rustfmt # Format Rust Code
+        gnumake # Build C++ Code
         clippy # Lint Rust Code
         rustc # Compile Rust Code
         cargo # The main part of the rust toolchain
+        cmake # Build C++ Code
+        gdb # C++ Debugger
         act # Run your GitHub Actions locally
         git # Distributed version control system
         cc # A C compiler, used by rustc
         z3 # A SAT solver needed for the assignment
-        gnumake # Build C++ Code
-        cmake # Build C++ Code
-        gdb # C++ Debugger
+        uv # a proper Python package manager
       ];
 
       buildInputs = packages ++ formatters ++ hooks;
+
+      env = {
+        UV_PYTHON_DOWNLOADS = "manual";
+        UV_PYTHON_PREFERENCE = "only-system";
+      };
 
       shellHook = ''
         ${config.pre-commit.shellHook}
@@ -43,6 +48,7 @@
         inherit buildInputs;
         inherit shellHook;
         inherit pure;
+        inherit env;
       };
     };
 }
