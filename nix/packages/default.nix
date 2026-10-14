@@ -11,8 +11,9 @@
     packages = {
       inherit (pkgs.stdenv) cc;
 
-      inherit (pkgs) texliveFull;
       inherit (pkgs) rust-analyzer;
+      inherit (pkgs) texliveFull;
+      inherit (pkgs) makeWrapper;
       inherit (pkgs) python313;
       inherit (pkgs) rustfmt;
       inherit (pkgs) gnumake;

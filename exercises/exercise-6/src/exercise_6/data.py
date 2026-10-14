@@ -2,12 +2,15 @@
 Functions related to getting data out of the data directory.
 """
 
+from os import getenv
 from pathlib import Path
 
 from pandas import read_csv
 
 __EXERCISE_ROOT = Path(__file__).resolve().parent.parent.parent
-__DATA_DIRECTORY = __EXERCISE_ROOT / "data"
+__DATA_DIRECTORY_FALLBACK = __EXERCISE_ROOT / "data"
+__DATA_DIRECTORY_ENV = getenv("EXERCISE_6_DATA_DIR", __DATA_DIRECTORY_FALLBACK)
+__DATA_DIRECTORY = Path(__DATA_DIRECTORY_ENV).resolve()
 __POKEC_DIRECTORY = __DATA_DIRECTORY / "pokec"
 pokec_edges_path = __DATA_DIRECTORY / "edges.csv"
 pokec_nodes_path = __DATA_DIRECTORY / "nodes.csv"

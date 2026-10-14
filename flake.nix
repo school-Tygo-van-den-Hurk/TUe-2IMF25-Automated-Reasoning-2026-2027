@@ -26,6 +26,15 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  # Translate UV packages into nix derivations
+  inputs.pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
+  inputs.pyproject-build-systems.url = "github:pyproject-nix/build-system-pkgs";
+  inputs.uv2nix = {
+    url = "github:pyproject-nix/uv2nix";
+    inputs.pyproject-nix.follows = "pyproject-nix";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   # The outputs are defined in ./nix
   outputs =
     inputs:

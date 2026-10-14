@@ -12,6 +12,7 @@ let
   paths = rec {
     inherit (import ./paths.lib.nix) exercise-6;
     toml = exercise-6 + "/pyproject.toml";
+    data = exercise-6 + "/data";
   };
 
   pyproject = builtins.fromTOML (builtins.readFile paths.toml);
@@ -19,7 +20,7 @@ let
   inherit (inputs) pyproject-build-systems;
   inherit (inputs) pyproject-nix;
   inherit (inputs) uv2nix;
-  
+
   inherit (uv2nix.lib.workspace) loadWorkspace;
 
   workspace = loadWorkspace {
@@ -27,7 +28,7 @@ let
   };
 in
 {
-  perSystem = 
+  perSystem =
     {
       self',
       pkgs,
@@ -54,9 +55,32 @@ in
       package = pythonSet.mkVirtualEnv name {
         ${name} = [ ];
       };
+
+      inherit (builtins) concatStringsSep;
+      inherit (builtins) attrNames;
+      scripts = attrNames pyproject.project.scripts;
+      executables = concatStringsSep " " (map (key: "\"${key}\"") scripts);
     in
     {
-      packages.${name} = package // {
+      packages.${name} = pkgs.symlinkJoin {
+        inherit name;
+
+        paths = [ package ];
+        nativeBuildInputs = with self'.packages; [
+          makeWrapper
+        ];
+
+        postBuild = /* Shell */ ''
+          data="$out/share/exercise-6/data"
+          mkdir --parents -- "$data"
+          cp "${paths.data}"/* --recursive "$data"
+          for executable in ${executables}; do
+            wrapProgram $out/bin/$executable \
+              --set EXERCISE_6_DATA_DIR "$data" \
+              --unset PYTHONPATH 
+          done
+        '';
+
         meta = meta // {
           inherit (pyproject.project) description;
           mainProgram = name;
