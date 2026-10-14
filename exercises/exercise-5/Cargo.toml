@@ -1,0 +1,10 @@
+[package]
+name = "exercise-5"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+oxidd = "0.13.0"
+oxidd-rules-bdd = "0.13.0"
+oxidd-parser = "0.5.0"
+oxidd-dump = "0.8.0"
