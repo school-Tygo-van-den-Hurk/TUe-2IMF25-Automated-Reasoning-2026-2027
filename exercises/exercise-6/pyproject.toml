@@ -3,13 +3,16 @@ name = "exercise_6"
 version = "0.1.0"
 description = "One prominent application of binary decision diagrams (BDDs) is in representing and reasoning about graphs. In this task, we consider directed graphs with labels on the nodes."
 readme = "readme.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
+    "numpy>=2.5.4",
     "oxidd==0.11.2",
+    "pandas>=3.0.6",
 ]
 
 [tool.uv]
 package = true
 
 [project.scripts]
-main = "exercise_6.main:main"
+main = "exercise_6.cli:main"
+pokec = "exercise_6.cli:pokec"

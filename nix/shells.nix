@@ -4,9 +4,12 @@
       config,
       self',
       pkgs,
+      lib,
       ...
     }:
     let
+      inherit (lib) makeLibraryPath;
+
       pure = true;
 
       formatters = builtins.attrValues config.treefmt.build.programs;
@@ -14,6 +17,8 @@
       packages = with self'.packages; [
         rust-analyzer # For Rust IDE integration
         texliveFull # Compile latex documents into PDFs
+        python313 # python code interpreter
+        cc.cc.lib # C libraries
         rustfmt # Format Rust Code
         gnumake # Build C++ Code
         clippy # Lint Rust Code
@@ -28,6 +33,11 @@
         uv # a proper Python package manager
       ];
 
+      libraries = with self'.packages; [
+        cc.cc.lib
+        zlib
+      ];
+
       buildInputs = packages ++ formatters ++ hooks;
 
       env = {
@@ -36,7 +46,10 @@
       };
 
       shellHook = ''
+        export LD_LIBRARY_PATH="${makeLibraryPath libraries}:$LD_LIBRARY_PATH"
+
         ${config.pre-commit.shellHook}
+
         if [ -f .env ]; then
           source .env
         fi
