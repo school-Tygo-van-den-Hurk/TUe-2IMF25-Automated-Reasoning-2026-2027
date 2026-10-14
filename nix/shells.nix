@@ -21,6 +21,7 @@
         cc.cc.lib # C libraries
         rustfmt # Format Rust Code
         gnumake # Build C++ Code
+        git-lfs # commit large files to git.
         clippy # Lint Rust Code
         rustc # Compile Rust Code
         cargo # The main part of the rust toolchain

@@ -15,6 +15,7 @@
       inherit (pkgs) python313;
       inherit (pkgs) rustfmt;
       inherit (pkgs) gnumake;
+      inherit (pkgs) git-lfs;
       inherit (pkgs) clippy;
       inherit (pkgs) rustc;
       inherit (pkgs) cargo;
