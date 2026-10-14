@@ -1,9 +1,15 @@
+{
+  lib,
+  ...
+}:
 let
+  meta = import ./meta.lib.nix lib;
+
   paths = rec {
-    root = ../..;
-    share = root + "/share";
+    inherit (import ./paths.lib.nix) root;
+    inherit (import ./paths.lib.nix) share;
+    inherit (import ./paths.lib.nix) docs;
     assignment = share + "/assignment.pdf";
-    src = root + "/docs";
   };
 in
 {
@@ -11,7 +17,7 @@ in
     packages.report = pkgs.stdenv.mkDerivation rec {
       name = "2imf25-automated-reasoning-report";
 
-      inherit (paths) src;
+      src = paths.docs;
       inherit (paths) assignment;
 
       buildInputs = with self'.packages; [
@@ -53,6 +59,8 @@ in
 
         runHook postInstall
       '';
+
+      inherit meta;
     };
   };
 }

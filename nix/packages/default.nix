@@ -3,6 +3,7 @@
     ./exercise-1.nix
     ./exercise-3.nix
     ./exercise-4.nix
+    ./exercise-6.nix
     ./report.nix
   ];
 
