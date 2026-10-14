@@ -1,0 +1,2 @@
+exercises/exercise-6/data/pokec/small/nodes.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/pokec/small/edges.csv filter=lfs diff=lfs merge=lfs -text
