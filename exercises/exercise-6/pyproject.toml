@@ -14,5 +14,5 @@ dependencies = [
 package = true
 
 [project.scripts]
-main = "exercise_6.cli:main"
+exercise-6 = "exercise_6.cli:main"
 pokec = "exercise_6.cli:pokec"

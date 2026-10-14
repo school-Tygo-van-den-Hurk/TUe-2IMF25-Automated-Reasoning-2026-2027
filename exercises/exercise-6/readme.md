@@ -29,11 +29,11 @@ You can run the program using `uv` as follows:
 # Where:
 #  - "dataset" is either "pokec", or "congress"
 #  - "size" is either "small", "medium", or "large"
-uv run main "$dataset" "$size"
+uv run exercise-6 "$dataset" "$size"
 uv run "$dataset" "$size"
 ```
 
-You can run `uv run main --help` for the documentation.
+You can run `uv run exercise-6 --help` for the documentation.
 
 ## Assignment
 
