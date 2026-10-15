@@ -11,24 +11,35 @@ __EXERCISE_ROOT = Path(__file__).resolve().parent.parent.parent
 __DATA_DIRECTORY_FALLBACK = __EXERCISE_ROOT / "data"
 __DATA_DIRECTORY_ENV = getenv("EXERCISE_6_DATA_DIR", __DATA_DIRECTORY_FALLBACK)
 __DATA_DIRECTORY = Path(__DATA_DIRECTORY_ENV).resolve()
-__POKEC_DIRECTORY = __DATA_DIRECTORY / "pokec"
-pokec_edges_path = __DATA_DIRECTORY / "edges.csv"
-pokec_nodes_path = __DATA_DIRECTORY / "nodes.csv"
 
 
 paths = {
     "pokec": {
         "small": {
-            "edges": __POKEC_DIRECTORY / "small" / "edges.csv",
-            "nodes": __POKEC_DIRECTORY / "small" / "nodes.csv",
+            "edges": __DATA_DIRECTORY / "pokec" / "small" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "pokec" / "small" / "nodes.csv",
         },
         "medium": {
-            "edges": __POKEC_DIRECTORY / "medium" / "edges.csv",
-            "nodes": __POKEC_DIRECTORY / "medium" / "nodes.csv",
+            "edges": __DATA_DIRECTORY / "pokec" / "medium" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "pokec" / "medium" / "nodes.csv",
         },
         "large": {
-            "edges": __POKEC_DIRECTORY / "large" / "edges.csv",
-            "nodes": __POKEC_DIRECTORY / "large" / "nodes.csv",
+            "edges": __DATA_DIRECTORY / "pokec" / "large" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "pokec" / "large" / "nodes.csv",
+        },
+    },
+    "congress": {
+        "small": {
+            "edges": __DATA_DIRECTORY / "congress" / "small" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "congress" / "small" / "nodes.csv",
+        },
+        "medium": {
+            "edges": __DATA_DIRECTORY / "congress" / "medium" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "congress" / "medium" / "nodes.csv",
+        },
+        "large": {
+            "edges": __DATA_DIRECTORY / "congress" / "large" / "edges.csv",
+            "nodes": __DATA_DIRECTORY / "congress" / "large" / "nodes.csv",
         },
     },
 }

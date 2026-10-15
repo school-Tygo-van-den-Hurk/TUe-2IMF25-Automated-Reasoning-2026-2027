@@ -15,4 +15,5 @@ package = true
 
 [project.scripts]
 exercise-6 = "exercise_6.cli:main"
+congress = "exercise_6.cli:congress"
 pokec = "exercise_6.cli:pokec"

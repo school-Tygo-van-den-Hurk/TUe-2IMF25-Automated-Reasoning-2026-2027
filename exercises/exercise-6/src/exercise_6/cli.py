@@ -57,6 +57,10 @@ def execute(dataset, size):
                 options=__dataset_options,
             )
 
+        # There is only one size for congress
+        if dataset == "congress":
+            size = "medium"
+
         while size not in __size_options:
             size = __ask_user_to_pick(
                 question="For what size would you like to run?",
