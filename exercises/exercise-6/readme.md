@@ -26,6 +26,12 @@
 You can run the program using `uv` as follows:
 
 ```Shell
+uv run exercise-6
+```
+
+You can also provide the dataset and size ahead of execution as arguments:
+
+```Shell
 # Where:
 #  - "dataset" is either "pokec", or "congress"
 #  - "size" is either "small", "medium", or "large"
@@ -33,7 +39,18 @@ uv run exercise-6 "$dataset" "$size"
 uv run "$dataset" "$size"
 ```
 
-You can run `uv run exercise-6 --help` for the documentation.
+So some concrete examples are:
+
+```Shell
+uv run exercise-6 pokec small
+uv run congress
+uv run pokec large
+uv run exercise-6
+```
+
+For the `congress` dataset the size option does nothing as there is only one
+real size available. You can run `uv run exercise-6 --help` for the
+documentation.
 
 ## Assignment
 
