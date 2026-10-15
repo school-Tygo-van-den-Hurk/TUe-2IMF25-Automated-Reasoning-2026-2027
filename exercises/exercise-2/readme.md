@@ -45,7 +45,8 @@ the following constraints:
     <tr>
       <th>height</th>
       <td>6</td><td>6</td><td>6</td><td>10</td><td>7</td><td>7</td><td>7</td>
-      <td>10</td><td>12</td><td>10</td><td>9</td><td>11</td><td>10</td><td>10</td>
+      <td>10</td><td>12</td><td>10</td><td>9</td><td>11</td><td>10</td>
+      <td>10</td>
     </tr>
     <tr>
       <th>hot</th>

@@ -6,14 +6,16 @@
 > You can use [Nix](https://nixos.org/) for obtaining the dependencies/tools
 > or to just compile and run the solvers with one command.
 >
-> <details><summary>Download all dependencies and tools for this exercise.</summary>
+> <details>
+> <summary>Download all dependencies and tools for this exercise.</summary>
 >
 > ```Shell
 > nix --experimental-features "nix-command flakes" develop .#exercise-3
 > ```
 >
 > </details>
-> <details><summary>Compile and execute this exercise.</summary>
+> <details>
+> <summary>Compile and execute this exercise.</summary>
 >
 > ```Shell
 > nix --experimental-features "nix-command flakes" run .#exercise-3
