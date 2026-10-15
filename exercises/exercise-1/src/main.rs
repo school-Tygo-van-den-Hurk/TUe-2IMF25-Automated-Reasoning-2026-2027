@@ -109,7 +109,7 @@ fn print(exercise: Exercise) {
     println!("{smt2}");
 }
 
-fn solve(exercise: Exercise) {
+fn solve(exercise: Exercise, prefix: Option<&str>) {
     match exercise.optimizer.check(&[]) {
         ::z3::SatResult::Unsat => println!("UNSAT"),
         ::z3::SatResult::Unknown => println!("Unknown SatResult"),
@@ -117,7 +117,11 @@ fn solve(exercise: Exercise) {
             None => panic!("Unknown fatal error: SAT but no such model?"),
             Some(model) => {
                 for line in model.to_string().lines().sorted() {
-                    println!("{line}");
+                    if let Some(prefix) = prefix {
+                        println!("{prefix} {line}");
+                    } else {
+                        println!("{line}");
+                    }
                 }
             }
         },
@@ -128,13 +132,13 @@ fn main() {
     let args = Args::parse();
     match args.command.unwrap_or_default() {
         SubCommand::Solve { sub_question } => match sub_question {
-            SubQuestion::A => solve(Exercise::a()),
-            SubQuestion::B => solve(Exercise::b()),
+            SubQuestion::A => solve(Exercise::a(), None),
+            SubQuestion::B => solve(Exercise::b(), None),
             SubQuestion::Both => {
                 println!("question a: ");
-                solve(Exercise::a());
-                println!("question b: ");
-                solve(Exercise::b());
+                solve(Exercise::a(), Some(&"a)"));
+                println!("\nquestion b: ");
+                solve(Exercise::b(), Some(&"b)"));
             }
         },
 
@@ -155,7 +159,7 @@ fn main() {
             SubQuestion::Both => {
                 println!("question a: ");
                 print(Exercise::a());
-                println!("question b: ");
+                println!("\nquestion b: ");
                 print(Exercise::b());
             }
         },
