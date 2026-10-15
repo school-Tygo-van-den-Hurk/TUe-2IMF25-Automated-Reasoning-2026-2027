@@ -17,6 +17,7 @@ in
       name = "run-exercise-interactive";
       executable = true;
       destination = "/bin/${name}";
+      meta.description = "Run all the exercises interactively.";
       text = ''
         #!${self'.packages.nushell}/bin/nu
         ${builtins.readFile paths.${name}}
