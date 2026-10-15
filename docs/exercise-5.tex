@@ -1,0 +1,164 @@
+\section{Configurable Systems}
+We are given a configuration system, and we need to reason about the configurations that contain the least amount of selected features.
+
+
+\begingroup
+\newcommand\fn[2]{\mathtt{#1}(#2)}
+\newcommand\hi[1]{\fn{dec}{#1, 1}}
+\newcommand\lo[1]{\fn{dec}{#1, 0}}
+
+
+
+\subsection{Solution}
+We identify the following parameters of the problem:
+\begin{itemize}
+  \item $n \in \mathbb{N}$ is the number of features, given in the header of the DIMACS file.
+  \item $\varphi$ is the CNF formula from the DIMACS file. It consists of clauses $C_1,\dots,C_m$, and every clause is a set of literals over the features.
+  \item $S=\{x_{218},x_{311}\}$ is the set of essential features.
+\end{itemize}
+We introduce the following variables:
+\begin{itemize}
+  \item $x_i \in \mathbb{B}$ for $i=1,\dots,n$: the value of $x_i$ is true if and only if feature $i$ is selected. The BDD variable order is given in the DIMACS file
+  \item $\mathit{var}(u)$ and $\mathit{level}(u)\in\{1,\dots,n+1\}$ are the variable and the level of a BDD node $u$, so $\mathit{level}(x_i)=i$. The terminals $\top$ and $\bot$ are at level $n+1$. The children of $u$ are $\hi{u}$ and $\lo{u}$.
+  \item $\mathtt{min\_cost}(u)\in\mathbb{N}\cup\{\infty\}$ is the smallest number of true variables on a path from $u$ to $\top$.
+\end{itemize}
+
+\subsubsection{Building the BDD}
+We are given a DIMACS file, which contains an CNF.
+We parse the CNF and after that we can build the BDD by iterating over the clauses, combining the variables with $\vee$ and combining the clauses with $\wedge$. 
+
+\subsubsection{Computing the minimum amount of variables needed}
+To compute the minimum amount of work we can 'walk' through the BDD, working from an bottoms-up manner we count the amount of 'true' edges we see.
+This can be formulised in the function
+\[
+\fn{min\_cost}{n} =
+\begin{cases}
+\infty, & n = \bot \\
+0, & n = \top \\
+\min\bigl( \fn{min\_cost}{\lo{n}}, 1 + \fn{min\_cost}{\hi{n}} \bigr) & otherwise
+\end{cases}
+\]
+
+
+\subsubsection{Computing the minimum amount of variables needed with essential variables}
+Certain variables can be deemed as essentials. Those variables \textit{must} be true.
+We achieve that though using the already build BDD and asserting those essential formulas.
+The essential variables are: $\{x_{218}, x_{311}\}$. This produces the BDD:
+\[
+F \wedge x_{218} \wedge x_{311}
+\]
+Where $F$ is the BDD given in the DIMACS file.
+
+\subsubsection{Building the BDD for the function with the minimum amount}
+We again 'walk' through the BDD, but instead of computing a simple statistics we now produce a new BDD.
+We do this via the \verb|min_config| function
+\[
+\fn{min\_config}{n} =
+\begin{cases}
+\bot & n = \bot \\
+\top & n = \top \\
+(\fn{var}{n} \wedge \fn{min\_hi}{n,\hi{n}}) \vee (\neg \fn{var}{n} \wedge \fn{min\_lo}{n,\lo{n}}) & otherwise
+\end{cases}
+\]
+\[
+\fn{min\_hi}{n, m} =
+\begin{cases}
+\bot & \fn{min\_cost}{m} \ge \fn{min\_cost}{n} \\
+\fn{min\_config}{m} \wedge \fn{skip}{n,m}  & otherwise
+\end{cases}
+\]
+\[
+\fn{min\_lo}{n, m} =
+\begin{cases}
+\bot & \fn{min\_cost}{m} > \fn{min\_cost}{n} \\
+\fn{min\_config}{m} \wedge \fn{skip}{n,m}  & otherwise
+\end{cases}
+\]
+\[
+  \fn{skip}{u,w} =\bigwedge_{\mathit{level}(u) < i < \mathit{level}(w)} \neg x_i 
+\]
+
+After we have restricted the BDD to only the configurations with the minimum amount, we also need to constrict the variables that may have been removed from the BDD.
+We do this by collecting all the used variables in the BDD and asserting them all to false.
+\[
+\fn{used\_vars}{n} =
+\begin{cases}
+\emptyset & n = \bot \vee n = \top \\
+\{\fn{var}{n}\} \cup \fn{used\_vars}{\hi{n}} \cup \fn{used\_vars}{\lo{n}} & otherwise
+\end{cases}
+\]
+\[
+\fn{constrict\_to\_used\_vars}{n,vars} = n \bigwedge_{v \in vars\backslash \fn{used\_vars}{n}} \neg v
+\]
+
+
+\subsubsection{Verifying SAT count for restricted BDD function}
+To add an extra verification step we add a \verb|minimum_count| function that counts amount of SAT count with respect to the constraints the same as \verb|min_hi| and \verb|min_lo|. An important distinction is it only counts the paths that lead to a $\top$, it does not account for unused variables and skipped levels.
+\[
+\fn{minimum\_count}{n} = 
+\begin{cases}
+0 & n = \bot \\
+1 & n = \top \\
+\fn{count\_lo}{n,\lo{n}} + \fn{count\_hi}{n,\hi{n}} & otherwise\\
+\end{cases}
+\]
+\[
+\fn{count\_lo}{n,m} =
+\begin{cases}
+0 & \fn{min\_cost}{m} > \fn{min\_cost}{n} \\
+\fn{minimum\_count}{m} & otherwise\\
+\end{cases}
+\]
+\[
+\fn{count\_hi}{n,m} = 
+\begin{cases}
+0 & \fn{min\_cost}{m} \ge \fn{min\_cost}{n} \\
+\fn{minimum\_count}{m} & otherwise\\
+\end{cases}
+\]
+
+\subsubsection{Runtime}
+Each of the function that work on a BDD in its given form would visit every node once and take $O(|BDD|)$. We can reduce that by introducing caches for the BDDFunctions.
+Each function that is presented contains a cache. If the given BDDFunction is already in the cache that result is returned, if not it is computed and added in the cache.
+The function \verb|minimum_count|, \verb|min_config| and their respective sub functions use two caches.
+The first one is the cache for the actual computation, the second cache is the \textit{cost\_cache}, that is passed to the \verb|min_cost| function.
+Since the \verb|min_cost| function walks through the BDD populating the \textit{cost\_cache}, all of the sub functions in \verb|minimum_count| and \verb|min_config| use the already populated \textit{cost\_cache}.
+Meaning that the those \verb|min_cost| function calls amounts to only a cache lookup.
+
+
+\subsection{Results}
+Per given DIMACS file we provide the calculated result in Table~\ref{tab:exercise-5-res}
+\def\tabletitle #1{\multicolumn{2}{c}{\cellcolor{black}\color{white}#1}}
+\newcommand\resulttable[9]{
+	\begin{tabular}[t]{lp{8.5cm}}
+		\tabletitle{Result for #1} \\
+		(i) BDD nodes of $\llbracket \varphi \rrbracket$ & #3 \\
+		(ii) Valid configurations $|V|$ & \texttt{\seqsplit{#4}} \\
+		(iii) $|F\upharpoonright_{cmin}|$ & #5 \\
+		(iv) Essential $|F\upharpoonright_{cmin}|$ for $S=\{x_{218},x_{311}\}$ & #6 \\
+		(v) BDD nodes of $\llbracket \varphi \rrbracket_{cmin}$ & #7 \\
+		(vi) Number of minimum configurations & #8 \\
+		Time to run & #9 \\
+\bottomrule
+\end{tabular}
+}
+ 
+\begin{table}[htbp]
+\caption{Results}
+\centering
+\begin{tabular}{c}
+	\resulttable{buildroot}{565}{1000}{197929412613795104033186650529764251995382268085040059140299644922581611052953218858293468858114370125417172798513453704215828256540658252191740135040064962560}{1}{14}{567}{1}{$\sim$0.7s}
+	\\
+	\resulttable{busybox}{820}{3076}{341966771173357574203468511726402787658846470020778853449916660355015748144503172810981395757363854768801367747323733822923115327180062924636321384290977279599243935937986560000000000000000000000}{17}{24}{847}{243}{$\sim$1.5s}
+	\\
+	\resulttable{embtoolkit}{2108}{172157}{5269086459380001633643953865313843951587769385459462783768187763744059253901124797424957712252293478301274200994406811283718331120294266116775137066700763565336063060585502617122754794227972693181096959562137510764573788550603417290201944648467575812000557794560479278383157151334042379118437642922099801799434308519509535427929029197430784}{50}{111}{3441}{102114}{$\sim$2m 20s}
+	\\
+	\resulttable{toybox}{544}{949}{144991790900969472}{28}{51}{610}{192}{$\sim$0.6s}
+	\\
+	\resulttable{uClinux}{1850}{2667}{16296287810675888690147565507275025288411747149327490005089123594835050398106693649467179008}{7}{11}{1852}{1}{$\sim$5.4s}
+
+	\label{tab:exercise-5-res}
+\end{tabular}
+\end{table}
+
+\endgroup

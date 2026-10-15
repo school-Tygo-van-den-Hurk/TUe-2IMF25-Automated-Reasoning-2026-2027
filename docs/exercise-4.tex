@@ -100,6 +100,13 @@ The formula would carry the value over across the rest of the iterations. These 
 
 \begin{table}[htbp]
 
+\begingroup
+	\newcommand\header[1]{
+	\hline
+		\tabletitle{Trace for k = #1} \\
+	\hline
+		Iteration & $a$  & $b$ & Condition \\
+	\hline}
 \caption{Traces}
 \label{tab:exercise4-traces}
 \def\false{ \texttt{False} }
@@ -109,11 +116,7 @@ The formula would carry the value over across the rest of the iterations. These 
 \begin{tabular}{cc}
 
 	\begin{tabular}[t]{|rrrr|}
-	\hline
-		\tabletitle{Trace for k = 1} \\
-	\hline
-		Iteration & $a$  & $b$ & Condition \\
-	\hline
+	\header{1}
 		0 	  & 1         & 1         & - \\
 		1 	  & 6         & 2         & \false \\
 		2 	  & 16        & 5         & \true \\
@@ -129,11 +132,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\end{tabular}
 	&
 	\begin{tabular}[t]{|rrrr|}
-	\hline
-		\tabletitle{Trace for k = 3} \\
-	\hline
-		Iteration & $a$  & $b$ & Condition \\
-	\hline
+	\header{3}
 		0  	  & 1    & 1   & -\\
 		1  	  & 6    & 2   & \false \\
 		2  	  & 11   & 8   & \false \\
@@ -151,11 +150,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\end{tabular}
 	\\
 	\begin{tabular}[t]{|rrrr|}
-	\hline
-		\tabletitle{Trace for k = 5} \\
-	\hline
-		Iteration & $a$  & $b$ & Condition \\
-	\hline
+	\header{5}
 		0  	  & 1   & 1    & -\\
 		1  	  & 9   & 4    & \true \\
 		2  	  & 14  & 13   & \false \\
@@ -170,11 +165,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\end{tabular}
 	& 
 	\begin{tabular}[t]{|rrrr|}
-	\hline
-		\tabletitle{Trace for k = 6} \\
-	\hline
-		Iteration & $a$  & $b$ & Condition \\
-	\hline
+	\header{6}
 		0  	  & 1   & 1    & -\\
 		1  	  & 9   & 4    & \true \\
 		2  	  & 14  & 13   & \false \\
@@ -191,11 +182,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\\
 
 	\begin{tabular}[t]{|rrrr|}
-	\hline
-		\tabletitle{Trace for k = 7} \\
-	\hline
-		Iteration & $a$  & $b$ & Condition \\
-	\hline
+	\header{7}
 		0  	  & 1 & 1      & -\\
 		1  	  & 6 & 2      & \false \\
 		2  	  & 11 & 8     & \false \\
@@ -211,6 +198,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\end{tabular}
 	&\\
 \end{tabular}
+\endgroup
 \end{table}
 
 \subsection{Remarks}
