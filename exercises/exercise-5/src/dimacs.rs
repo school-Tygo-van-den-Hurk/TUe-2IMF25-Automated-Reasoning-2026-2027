@@ -1,9 +1,11 @@
-use oxidd::bdd::BDDFunction;
-use oxidd::util::AllocResult;
-use oxidd::{BooleanFunction, Manager, ManagerRef};
-use std::collections::HashMap;
-use std::fmt;
-use std::str::FromStr;
+use ::oxidd::BooleanFunction;
+use ::oxidd::Manager;
+use ::oxidd::ManagerRef;
+use ::oxidd::bdd::BDDFunction;
+use ::oxidd::util::AllocResult;
+use ::std::collections::HashMap;
+use ::std::fmt;
+use ::std::str::FromStr;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Dimacs {
@@ -14,6 +16,7 @@ pub struct Dimacs {
     pub rev_ordering: HashMap<u32, u32>,
     pub clauses: Vec<Vec<Variable>>,
 }
+
 #[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
 pub struct Variable {
     variable: u32,
@@ -31,6 +34,7 @@ impl Dimacs {
             clauses: Vec::new(),
         }
     }
+
     pub fn add_ordering(&mut self, ordering: HashMap<u32, u32>) {
         self.has_ordering = true;
         self.ordering = ordering;
@@ -44,7 +48,6 @@ impl Dimacs {
     pub fn add_clause(&mut self, clause: Vec<Variable>) {
         self.clauses.push(clause);
     }
-
 
     /// Build a BDD from the dimacs formula, with a given [BDDManagerRef].
     pub fn to_bdd(
@@ -66,8 +69,9 @@ impl Dimacs {
             })?;
             cnf.and(&clause_fn)
         })?;
-        Ok((formula,variables))
+        Ok((formula, variables))
     }
+
     pub fn to_function(
         &self,
         var: &Variable,
@@ -81,6 +85,7 @@ impl Dimacs {
             ))
         }
     }
+
     pub fn to_index(&self, var: u32) -> usize {
         // we subtract here so we have the number as the index
         if self.has_ordering {

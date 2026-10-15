@@ -1,14 +1,15 @@
-use oxidd::bdd::BDDFunction;
-use oxidd::util::AllocResult;
-use oxidd::{Function, Manager, BooleanFunction, HasLevel};
-use std::collections::{HashMap, HashSet};
+use ::oxidd::BooleanFunction;
+use ::oxidd::Function;
+use ::oxidd::HasLevel;
+use ::oxidd::Manager;
+use ::oxidd::bdd::BDDFunction;
+use ::oxidd::util::AllocResult;
+use ::std::collections::HashMap;
+use ::std::collections::HashSet;
 
 /// Calculate the minimum amount of variables that would need to be **true**
 /// for the formula to be true
-pub fn min_cost(
-    f: &BDDFunction,
-    cache: &mut CostCache
-) -> Option<usize> {
+pub fn min_cost(f: &BDDFunction, cache: &mut CostCache) -> Option<usize> {
     if let Some(c) = cache.get(f) {
         return *c;
     }
@@ -34,6 +35,7 @@ pub fn min_cost(
     cache.insert(f.clone(), result);
     result
 }
+
 /// Calculate the model count with te minimum cost.
 /// Comparable with sat_count for a [BBDFunction],
 /// but does not take in to account te skipped levels.
@@ -53,15 +55,17 @@ pub fn minimum_count(
 
     let result = match f.cofactors() {
         Some((hi, lo)) => {
-            let hi_count = if let Some(hi_cost) = min_cost(&hi, cost_cache) 
-                && hi_cost < cost.unwrap() {
+            let hi_count = if let Some(hi_cost) = min_cost(&hi, cost_cache)
+                && hi_cost < cost.unwrap()
+            {
                 minimum_count(&hi, cache, cost_cache)
             } else {
                 0
             };
-            let lo_count = if let Some(lo_cost) = min_cost(&lo, cost_cache) 
-                && lo_cost <= cost.unwrap() {
-                    minimum_count(&lo, cache, cost_cache)
+            let lo_count = if let Some(lo_cost) = min_cost(&lo, cost_cache)
+                && lo_cost <= cost.unwrap()
+            {
+                minimum_count(&lo, cache, cost_cache)
             } else {
                 0
             };
@@ -75,16 +79,18 @@ pub fn minimum_count(
             }
         }
     };
+
     cache.insert(f.clone(), result);
     result
 }
+
 /// Get the unused variables of a BDDFunction
 /// Walks through the BDD and removes the variable of the function to the used HashSet.
 fn calculate_unused_variables(
     f: &BDDFunction,
     vars: &[BDDFunction],
     out: &mut HashSet<BDDFunction>,
-    visited: &mut HashSet<BDDFunction>
+    visited: &mut HashSet<BDDFunction>,
 ) {
     if visited.contains(f) || is_terminal(f) {
         return;
@@ -101,29 +107,31 @@ fn calculate_unused_variables(
 /// Constrict the given BDD function by asserting that the unused variables are false
 pub fn constrict_function_to_used_variables(
     f: &BDDFunction,
-    vars: &[BDDFunction]
+    vars: &[BDDFunction],
 ) -> AllocResult<BDDFunction> {
     let mut unused_variables = HashSet::from_iter(vars.iter().cloned());
     calculate_unused_variables(f, vars, &mut unused_variables, &mut HashSet::new());
-    unused_variables.iter()
-        .try_fold(f.clone(),|f, v| f.and(&BDDFunction::not(v)?))
+    unused_variables
+        .iter()
+        .try_fold(f.clone(), |f, v| f.and(&BDDFunction::not(v)?))
 }
 
 fn is_terminal(f: &BDDFunction) -> bool {
     f.cofactors().is_none()
 }
+
 fn get_level(f: &BDDFunction) -> usize {
     f.with_manager_shared(|m, e| m.get_node(e).unwrap_inner().level()) as usize
 }
+
 /// Builds a vector for the BDDFunctions per level between the parent_level and the level
 fn get_skipped_variables(
     parent_level: usize,
     level: usize,
     vars: &[BDDFunction],
-) -> Vec<BDDFunction>  {
+) -> Vec<BDDFunction> {
     vars[parent_level + 1..level].to_vec()
 }
-
 
 // Build a sub BDDFunction, do not use on its own, its part of [minimum_configuration]
 fn resolve_sub_min_config<F>(
@@ -132,14 +140,14 @@ fn resolve_sub_min_config<F>(
     cost_cache: &mut CostCache,
     cache: &mut Cache,
     parent_level: usize,
-    cost_predicate: F
-) -> AllocResult<BDDFunction> 
-where 
-    F: Fn(usize) -> bool 
+    cost_predicate: F,
+) -> AllocResult<BDDFunction>
+where
+    F: Fn(usize) -> bool,
 {
     let f_false = f.with_manager_shared(|m, _| BDDFunction::f(m));
-    if is_terminal(f) && !f.valid() { 
-        return Ok(f_false); 
+    if is_terminal(f) && !f.valid() {
+        return Ok(f_false);
     }
 
     let level = if is_terminal(f) {
@@ -149,8 +157,9 @@ where
     };
 
     if let Some(cost) = min_cost(f, cost_cache)
-        && cost_predicate(cost) {
-        let t = f.with_manager_shared(|m,_| BDDFunction::t(m));
+        && cost_predicate(cost)
+    {
+        let t = f.with_manager_shared(|m, _| BDDFunction::t(m));
 
         let skipped_vars = get_skipped_variables(parent_level, level, vars)
             .iter()
@@ -165,6 +174,7 @@ where
     }
     Ok(f_false)
 }
+
 pub type CostCache = HashMap<BDDFunction, Option<usize>>;
 pub type Cache = HashMap<BDDFunction, BDDFunction>;
 
@@ -179,10 +189,12 @@ pub fn minimum_configuration(
     if let Some(c) = cache.get(f) {
         return Ok(c.clone());
     }
+
     let cost = min_cost(f, cost_cache);
     if cost.is_none() {
         return Ok(f.with_manager_shared(|m, _| BDDFunction::f(m)));
     }
+
     let result = match f.cofactors() {
         Some((hi, lo)) => {
             let parent_level = get_level(f);
@@ -196,6 +208,7 @@ pub fn minimum_configuration(
 
             v.ite(&hi_func, &lo_func)
         }
+
         None => Ok(f.with_manager_shared(|m, _| {
             if f.satisfiable() {
                 BDDFunction::t(m)
@@ -204,6 +217,7 @@ pub fn minimum_configuration(
             }
         })),
     }?;
+
     cache.insert(f.clone(), result.clone());
     Ok(result)
 }
@@ -244,6 +258,7 @@ mod tests {
         let mut cache = HashMap::new();
         min_cost(f, &mut cache)
     }
+
     fn cases() -> Vec<(usize, Vec<Vec<i32>>)> {
         vec![
             // (1 ∨ 2) ∧ (¬1 ∨ 3)
@@ -260,6 +275,7 @@ mod tests {
             (4, vec![vec![-1, -2], vec![-4, -3]]),
         ]
     }
+
     fn for_all_assignments(n: usize, mut check: impl FnMut(&[bool])) {
         for mask in 0u64..(1 << n) {
             let a: Vec<bool> = (0..n).map(|i| (mask >> i) & 1 == 1).collect();
@@ -280,6 +296,7 @@ mod tests {
             })
         })
     }
+
     #[test]
     fn bdd_matches_cnf() {
         for (n, clauses) in cases() {
@@ -298,6 +315,7 @@ mod tests {
             });
         }
     }
+
     fn cnf_to_bdd(
         mref: &BDDManagerRef,
         vars: &[BDDFunction],
@@ -315,6 +333,7 @@ mod tests {
         }
         Ok(f)
     }
+
     fn print_tree(f: &BDDFunction, indent: usize) -> String {
         let pad = "  ".repeat(indent);
         match f.cofactors() {
@@ -330,6 +349,7 @@ mod tests {
             None => format!("{pad}{}", if f.satisfiable() { "TRUE" } else { "FALSE" }),
         }
     }
+
     fn print_assignment(a: &[bool]) -> String {
         a.iter()
             .enumerate()
@@ -346,6 +366,7 @@ mod tests {
             let (mref, vars) = setup(n);
             let slices: Vec<&[i32]> = clauses.iter().map(|c| c.as_slice()).collect();
             let f = cnf_to_bdd(&mref, &vars, &slices).expect("");
+
             let min_cost = min_of(&f).expect("");
             let mut brute_cost = usize::MAX;
             for_all_assignments(n, |a| {
@@ -354,6 +375,7 @@ mod tests {
                     brute_cost = std::cmp::min(brute_cost, count);
                 }
             });
+
             assert_eq!(brute_cost, min_cost, "costs must be the same");
             let minimized = constrict_function_to_used_variables(
                 &minimum_configuration(&f, &vars, &mut HashMap::new(), &mut HashMap::new())?,
@@ -366,13 +388,13 @@ mod tests {
                 if !eval_at(&f, &vars, a) {
                     assert!(
                         !eval_at(&minimized, &vars, a),
-                        "minimized cannot have a assignemt to be true is its false in the original"
+                        "minimized cannot have a assignment to be true is its false in the original"
                     );
                 } else {
                     if count == min_cost {
                         assert!(
                             eval_at(&minimized, &vars, a),
-                            "original function evals to true, therefore with min assignment the mininmized should also be true: \nAssingment:{} \nORIGINAL\n{} \n Minimized:\n{}",
+                            "original function evals to true, therefore with min assignment the minimized should also be true: \nAssignment:{} \nORIGINAL\n{} \n Minimized:\n{}",
                             print_assignment(a),
                             print_tree(&f, 0),
                             print_tree(&minimized, 0),
@@ -380,7 +402,7 @@ mod tests {
                     } else {
                         assert!(
                             !eval_at(&minimized, &vars, a),
-                            "bdd with assignment of more than min cost should be false in minimized function \nAssingment:{} \nORIGINAL\n{} \n Minimized:\n{}\ncost: {}",
+                            "bdd with assignment of more than min cost should be false in minimized function \nAssignment:{} \nORIGINAL\n{} \n Minimized:\n{}\ncost: {}",
                             print_assignment(a),
                             print_tree(&f, 0),
                             print_tree(&minimized, 0),
