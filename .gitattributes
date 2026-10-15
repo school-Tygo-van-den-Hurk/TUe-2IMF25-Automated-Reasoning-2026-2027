@@ -1,2 +1,8 @@
 exercises/exercise-6/data/pokec/small/nodes.csv filter=lfs diff=lfs merge=lfs -text
 exercises/exercise-6/data/pokec/small/edges.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/congress/medium/edges.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/congress/medium/nodes.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/pokec/large/edges.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/pokec/large/nodes.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/pokec/medium/edges.csv filter=lfs diff=lfs merge=lfs -text
+exercises/exercise-6/data/pokec/medium/nodes.csv filter=lfs diff=lfs merge=lfs -text

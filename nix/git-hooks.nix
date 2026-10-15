@@ -127,7 +127,10 @@
         ];
         settings.config = {
           files.ignore-hidden = false;
-          files.extend-exclude = [ "**/docs/.gitignore" ];
+          files.extend-exclude = [
+            "**/docs/.gitignore"
+            "**/data/**/*.csv"
+          ];
         };
       };
 
