@@ -32,13 +32,14 @@ in
       };
     };
 
-    packages.${name} = pkgs.runCommand name
-      {
-        nativeBuildInputs = with self'.packages; [ zip ];
-        inherit meta;
-      }
-      /* Shell */ ''
-        zip -r "$out" -9 '${self}'
-      '';
+    packages.${name} =
+      pkgs.runCommand name
+        {
+          nativeBuildInputs = with self'.packages; [ zip ];
+          inherit meta;
+        }
+        /* Shell */ ''
+          zip -r "$out" -9 '${self}'
+        '';
   };
 }
