@@ -1,82 +1,109 @@
 \section{Formula 1 Tracks}
-NOTE THIS section is a WORK IN PROGRESS
-The $ABC 123 XYZ$ city has been asked to be a location in new formula 1 season.
-The major has tasked you to find a optimal route throughout the city. They have
-assembled the following requirements for the route:
+\textbf{Note: this section is a work in progress.}
+
+\texttt{SAT City} has been asked to host a race in the new Formula~1 season.
+The mayor has tasked you with finding an optimal circuit through the city,
+subject to the following requirements:
 \begin{itemize}
-\item All cars must use existing roads. The city does not wish to build more roads,
-  nor can they destroy existing buildings.
-\item You must visit $m$ out of $n$ special locations throughout the city.
-\item The length of the circuit must be between $k$ and $l$.
-\item To prevent injuries and deaths the circuit may never cross itself.
-\item It must have between $a$ and $b$ corners.
-\item As they need to race 50 laps around it, the start location and end location
-  need to be the same place. (The circuit needs to be a full circle.)
-\item For each street you need permits and possible renovations you are tasked to minimize the total cost for the race.
-
+  \item The circuit must use existing roads only, no roads may be built and no buildings destroyed.
+  \item The circuit must visit at least $m$ of the $n$ points of interest in the city.
+  \item The length of the circuit must be between $\ell_{\min}$ and $\ell_{\max}$.
+  \item To prevent injuries, the circuit may never cross itself.
+  \item The circuit must contain between $c_{\min}$ and $c_{\max}$ corners.
+  \item As the cars race 50 laps, the start and end location must coincide, i.e.\ the circuit is a single closed loop.
+  \item Some roads require renovation before the race may use them, due to time at most $3$ roads may be renovated.
+  \item The total cost of the race (permits and renovations) must be minimized.
 \end{itemize}
+The mayor has provided a overview of all the roads.
+He has been kind enough to color the points of interests in blue, 
+and colored the roads that would need to be renovated to red.
+\begin{figure}
+\centering
+\caption{Layout of \texttt{SAT City}}
+\newcommand{\baseunit}{50}   % metres per grid square
+\newcommand{\gs}{0.8}        % drawing scale: cm per grid square
+% =========================================
 
-The city layout looks like:
-
-\begin{tikzpicture}[x=0.8cm,y=0.8cm,
+\begin{tikzpicture}[x=0.8 cm,y=0.8 cm,
   v/.style={circle,fill,inner sep=1.4pt},
-  line/.style={thick,blue!60!black}]
+  I/.style={circle,fill,blue,inner sep=1.4pt},
+  line/.style={thick,black!60!black},
+  line-broken/.style={thick,red!100!black},
+  lbl/.style={fill=white,inner sep=1pt,font=\tiny}]
+
+% \edge[style]{start}{end}: draws the segment and labels its length in metres
+\newcommand{\edge}[3][line]{\edgeA[#1]#2#3}
+\def\edgeA[#1](#2,#3)(#4,#5){%
+  \pgfmathparse{veclen((#4)-(#2),(#5)-(#3))*\baseunit}%
+  \let\elen\pgfmathresult
+  \draw[#1] (#2,#3) -- (#4,#5)
+    node[midway,lbl] {\pgfmathprintnumber[fixed,precision=0]{\elen}};}
+\newcommand{\bedge}[2]{\edge[line-broken]{#1}{#2}}
 
 % ---- outer frame ----
-\draw[line] (0,0) -- (6,0);
-\draw[line] (0,0) -- (0,-10) -- (5,-10);
-\draw[line] (6,0) -- (6,-8);
+\edge{(0,0)}{(2,0)}   \edge{(2,0)}{(4,0)}   \edge{(4,0)}{(6,0)}
+\edge{(0,0)}{(0,-2)}  \edge{(0,-2)}{(0,-4)} \bedge{(0,-4)}{(0,-5)}
+\edge{(0,-5)}{(0,-7)} \edge{(0,-7)}{(0,-10)}
+\edge{(0,-10)}{(3,-10)} \edge{(3,-10)}{(5,-10)}
+\edge{(6,0)}{(6,-2)}  \edge{(6,-2)}{(6,-4)} \edge{(6,-4)}{(6,-7)} \edge{(6,-7)}{(6,-8)}
 
 % ---- top / upper middle ----
-\draw[line] (4,0) -- (4,-6);
-\draw[line] (2,0) -- (2,-4);
-\draw[line] (3,-0.5) -- (5,-0.5) -- (6,-2);
-\draw[line] (3,-0.5) -- (3,-4);
-\draw[line] (3,-0.5) -- (2,-3);
-\draw[line] (3,-3) -- (5,-3) -- (5,-4) -- (7,-4);
-\draw[line] (3,-4) -- (0,-4);
+\edge{(4,0)}{(4,-0.5)} \bedge{(4,-0.5)}{(4,-3)}
+\edge{(4,-3)}{(4,-5)}  \edge{(4,-5)}{(4,-6)}
+\edge{(2,0)}{(2,-1)}   \edge{(2,-1)}{(2,-3)}  \edge{(2,-3)}{(2,-4)}
+\edge{(3,-0.5)}{(4,-0.5)} \edge{(4,-0.5)}{(5,-0.5)} \edge{(5,-0.5)}{(6,-2)}
+\edge{(3,-0.5)}{(3,-3)} \edge{(3,-3)}{(3,-4)}
+\edge{(3,-0.5)}{(2,-3)}
+\edge{(3,-3)}{(4,-3)} \edge{(4,-3)}{(5,-3)} \edge{(5,-3)}{(5,-4)}
+\edge{(5,-4)}{(6,-4)} \edge{(6,-4)}{(7,-4)}
+\edge{(3,-4)}{(2,-4)} \edge{(2,-4)}{(0,-4)}
 
 % ---- upper left ----
-\draw[line] (1,-1) -- (2,-1);
-\draw[line] (1,-1) -- (1,-3) -- (2,-3);
-\draw[line] (0,-2) -- (1,-2);
-\draw[line] (1,-3) -- (0,-4);
+\edge{(1,-1)}{(2,-1)}
+\edge{(1,-1)}{(1,-2)} \edge{(1,-2)}{(1,-3)} \edge{(1,-3)}{(2,-3)}
+\edge{(0,-2)}{(1,-2)}
+\edge{(1,-3)}{(0,-4)}
 
 % ---- right side ----
-\draw[line] (6,-2) -- (8,-2) -- (8,-7);
-\draw[line] (6,-4) -- (7,-6);
-\draw[line] (7,-4) -- (7,-7);
-\draw[line] (7,-6) -- (8,-6);
-\draw[line] (6,-7) -- (8,-7);
-\draw[line] (8,-7) -- (9,-8) -- (9,-10) -- (8,-11) -- (7,-12) -- (4,-12);
-\draw[line] (8,-7) -- (8,-9) -- (7,-10) -- (8,-11);
-\draw[line] (7,-10) -- (7,-12);
-\draw[line] (7,-10) -- (5,-9) -- (2,-9);
-\draw[line] (5,-9) -- (5,-10);
+\edge{(6,-2)}{(8,-2)}
+\edge{(8,-2)}{(8,-6)} \edge{(8,-6)}{(8,-7)}
+\edge{(6,-4)}{(7,-6)}
+\edge{(7,-4)}{(7,-6)} \edge{(7,-6)}{(7,-7)}
+\bedge{(7,-6)}{(8,-6)}
+\edge{(6,-7)}{(7,-7)} \bedge{(7,-7)}{(8,-7)}
+\edge{(8,-7)}{(9,-8)} \edge{(9,-8)}{(9,-10)} \edge{(9,-10)}{(8,-11)}
+\edge{(8,-11)}{(7,-12)} \edge{(7,-12)}{(4,-12)}
+\edge{(8,-7)}{(8,-9)} \edge{(8,-9)}{(7,-10)} \edge{(7,-10)}{(8,-11)}
+\edge{(7,-10)}{(7,-12)}
+\edge{(7,-10)}{(5,-9)} \edge{(5,-9)}{(2,-9)}
+\bedge{(5,-9)}{(5,-10)}
 
 % ---- centre ----
-\draw[line] (2,-5) -- (4,-5);
-\draw[line] (2,-5) -- (2,-9);
-\draw[line] (2,-7) -- (4,-7) -- (6,-7);
-\draw[line] (4,-6) -- (5,-6) -- (6,-7);
-\draw[line] (5,-6) -- (5,-8);
-\draw[line] (4,-7) -- (4,-8) -- (6,-8);
-\draw[line] (4,-7) -- (5,-8);
+\edge{(2,-5)}{(4,-5)}
+\edge{(2,-5)}{(2,-7)} \edge{(2,-7)}{(2,-9)}
+\bedge{(2,-7)}{(4,-7)}
+\edge{(4,-7)}{(5,-7)} \edge{(5,-7)}{(6,-7)}
+\edge{(4,-6)}{(5,-6)} \edge{(5,-6)}{(6,-7)}
+\edge{(5,-6)}{(5,-7)} \edge{(5,-7)}{(5,-8)}
+\edge{(4,-7)}{(4,-8)} \edge{(4,-8)}{(5,-8)} \edge{(5,-8)}{(6,-8)}
+\edge{(4,-7)}{(5,-8)}
 
 % ---- left middle ----
-\draw[line] (0,-5) -- (1,-5) -- (1,-6) -- (0.5,-6) -- (0.5,-5);
-\draw[line] (1,-6) -- (0,-7) -- (1,-7) -- (1,-6);
-\draw[line] (0,-7) -- (1,-8) -- (0,-10);
+\edge{(0,-5)}{(0.5,-5)} \edge{(0.5,-5)}{(1,-5)}
+\edge{(1,-5)}{(1,-6)} \edge{(1,-6)}{(0.5,-6)} \edge{(0.5,-6)}{(0.5,-5)}
+\edge{(1,-6)}{(0,-7)} \edge{(0,-7)}{(1,-7)} \edge{(1,-7)}{(1,-6)}
+\edge{(0,-7)}{(1,-8)} \edge{(1,-8)}{(0,-10)}
 
 % ---- bottom ----
-\draw[line] (3,-10) -- (3,-12) -- (2,-12) -- (2,-11) -- (3,-12);
-\draw[line] (3,-10) -- (4,-11) -- (5,-10);
-\draw[line] (4,-11) -- (4,-12);
-\draw[line] (0,-10) -- (2,-12);
-\draw[line] (3,-12) -- (4,-12);
+\edge{(3,-10)}{(3,-11)} \edge{(3,-11)}{(3,-12)}
+\edge{(3,-12)}{(2,-12)} \edge{(2,-12)}{(2,-11)} \edge{(2,-11)}{(3,-12)}
+\edge{(3,-10)}{(4,-11)} \edge{(4,-11)}{(5,-10)}
+\edge{(4,-11)}{(4,-12)}
+\edge{(0,-10)}{(1,-11)} \edge{(1,-11)}{(2,-12)}
+\edge{(3,-12)}{(4,-12)}
 
 % ---- vertices ----
-\foreach \p in {(0,0),(2,0),(4,0),(6,0),
+\foreach \p in {(0,0),(2,0),(4,0),(6,0),(4,-0.5),
   (3,-0.5),(5,-0.5),(1,-1),(2,-1),
   (0,-2),(1,-2),(6,-2),(8,-2),
   (1,-3),(2,-3),(3,-3),(4,-3),(5,-3),
@@ -92,77 +119,97 @@ The city layout looks like:
   \node[v] at \p {};
 
 % ---- "I" labels ----
-\node at (6.4,0.1)   {I};
-\node at (1.4,-1.3)  {I};
-\node at (5.4,-2.9)  {I};
-\node at (7.4,-3.9)  {I};
-\node at (-0.4,-7.2) {I};
-\node at (2.3,-7.3)  {I};
-\node at (5.4,-10)   {I};
-\node at (9.4,-10.2) {I};
-\node at (3.2,-12.4) {I};
+\node[I] at (6,0)   {};
+\node[I] at (1,-1)  {};
+\node[I] at (5,-3)  {};
+\node[I] at (7,-4)  {};
+\node[I] at (0,-7) {};
+\node[I] at (2,-7)  {};
+\node[I] at (5,-10)   {};
+\node[I] at (9,-10) {};
+\node[I] at (3,-12) {};
 \end{tikzpicture}
+\end{figure}
 
 \subsection{Solution}
+
 \begingroup
 
 \newcommand\ite[3]{\mathtt{ite}(#1,#2,#3)}
-
-We identify the variables
-
+We identify the following parameters of the problem:
 \begin{itemize}
-\item $m = 4$ is the amount of minimum point of interests the track 'visits'
-\item $n = 6$ is the total amount of point of interests in the city
-\item $a = 7$ is the minimum amount of corners
-\item $b = 24$ is the maximum amount of corners
-\item $l = 1500m$ is the minimum length of the track
-\item $k = 6000m$ is the maximum length of the track
-\item $\alpha_{e} \in \mathbb{B}$ representing whether the road $e$ is part of the track
-\item $\beta_{e,e'} \in \mathbb{B}$ representing whether the roads $e$, and $e'$ contain a point of intertests
-\item $\delta_{e} \in \mathbb{N}$ representing the distance of the road $e$
-\item $\gamma_{e,e'} \in \mathbb{N}$ representing whether there is a corner between $e$ and $e'$
-
+  \item $m = 4$ is the minimum number of points of interest the track visits.
+  \item $n = 6$ is the total number of points of interest in the city.
+  \item $a = 7$ is the minimum number of corners.
+  \item $b = 24$ is the maximum number of corners.
+  \item $l = 1500$\,m is the minimum length of the track.
+  \item $k = 6000$\,m is the maximum length of the track.
+  \item $\delta_e \in \mathbb{N}$ is the length of road $e$.
+  \item $pc_b \in \mathbb{N}$ is the permit cost of block $b$.
 \end{itemize}
 
-\subsubsection{Sets}
+We use the following sets:
 \begin{itemize}
-\item The set of intersections: $V$
-\item The set of intersections adjecent to edge $e$: $V_e$
-\item The set of roads adjecent to intersection $v$: $E_v$
-\item The set of points of intertests: $S \subseteq V$
+  \item $V$ is the set of intersections and $E$ is the set of roads.
+  \item $B$ is the set of street blocks.
+  \item $E_b$ is the set of roads adjacent to block $b$.
+  \item $E_v$ is the set of roads adjacent to intersection $v$.
+  \item $R \subseteq E$ is the set of roads that need to be renovated.
 \end{itemize}
 
-The track does not cross it self, that is each intersection has either 0 or 2 roads on the track
+To construct the track, we introduce the following variables:
+\begin{itemize}
+  \item $\alpha_e \in \mathbb{B}$ for $e \in E$: true iff road $e$ is part of the track.
+  \item $\beta_{e,e'} \in \mathbb{B}$ for $e,e' \in E$: true iff the roads $e$ and $e'$ contain a point of interest.
+  \item $\gamma_{e,e'} \in \mathbb{B}$ for $e,e' \in E$: true iff there is a corner between $e$ and $e'$.
+  \item $p_b \in \mathbb{B}$ for $b \in B$: true iff the permit for block $b$ must be paid.
+\end{itemize}
+
+
+\paragraph{Cross.}
+The track does not cross it self, that is each intersection has either 0 or 2 roads on the track.
+For every intersection $v$ this is expressed by
 \[
-	\bigwedge_{v \in V} (\sum_{e \in E_v} \ite{\alpha_e}{1}{0} = 0 \vee \sum_{e \in V_e} \ite{\alpha_e}{1}{0} = 2)
+(\sum_{e \in E_v} \ite{\alpha_e}{1}{0} = 0 \vee \sum_{e \in V_e} \ite{\alpha_e}{1}{0} = 2)
 \]
-The track visits at least $m$ special locations
+
+\paragraph{Points of interest.}
+The track visits at least $m$ points of interest
 \[
 \sum_{(e,e') \in E \times E}(\ite{\alpha_{e} \wedge \alpha_{e'} \wedge \beta_{e,e'}}{1}{0}) \ge m
 \]
+
+\paragraph{Corners.}
 There are between $a$ and $b$ corners
 \[
 a \leq \sum_{(e,e') \in E \times E} \ite{\alpha_{e} \wedge \alpha_{e'} \wedge \gamma_{e,e'}}{1}{0}) \leq b
 \]
 
+\paragraph{Renovations.}
+There track requires at most $3$ roads to be renovated
+\[
+\sum_{e\in R } \ite{\alpha_{e} }{1}{0}) \leq 3
+\]
+
+\paragraph{Length.}
 The track length is between $k$ and $l$
 \[
 k \leq \sum_{e \in E} \ite{\alpha_{e} }{\delta_{e}}{0} \leq l
 \]
 
+\paragraph{Permits.}
+A block needs a permit if an adjacent road is part of the track.
+For every block $B$ this is expressed by
+\[
+  \bigwedge_{e \in E_B} (\alpha_e \Rightarrow p_B).
+\]
 
-Options
-Minimize cost of roads:
+\paragraph{Objective.}
+We minimize the cost of the permits and the renovations (10 per metre):
 \[
-Mininimze \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{c_{v,v'}}{0} 
-\]
-Minimize internal cost - each internal block has a wheight.
-For that we have assert for the internal blocks
-\[
-\bigwedge_{0 \leq i < s}(\bigvee_{(v, v')\in (V \times V)} (\alpha_{v,i-1} \wedge \alpha_{v', i} \wedge ()))b
-\]
-\[
-Mininimze \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{c_{v,v'}}{0} 
+ \text{minimize} \quad
+ \big( \sum_{b \in B} \ite{p_b}{pc_b}{0} \big) + 
+ \big( \sum_{e \in R} \ite{\alpha_e}{10 \cdot \delta_e}{0}\big)
 \]
 
 
