@@ -10,8 +10,6 @@
     let
       inherit (lib) makeLibraryPath;
 
-      pure = true;
-
       formatters = builtins.attrValues config.treefmt.build.programs;
       hooks = config.pre-commit.settings.enabledPackages;
       packages = with self'.packages; [
@@ -44,24 +42,16 @@
       env = {
         UV_PYTHON_DOWNLOADS = "manual";
         UV_PYTHON_PREFERENCE = "only-system";
+        LD_LIBRARY_PATH = makeLibraryPath libraries;
       };
 
-      shellHook = ''
-        export LD_LIBRARY_PATH="${makeLibraryPath libraries}:$LD_LIBRARY_PATH"
-
-        ${config.pre-commit.shellHook}
-
-        if [ -f .env ]; then
-          source .env
-        fi
-      '';
+      inherit (config.pre-commit) shellHook;
     in
     rec {
       devShells.default = devShells.development;
       devShells.development = pkgs.mkShell {
         inherit buildInputs;
         inherit shellHook;
-        inherit pure;
         inherit env;
       };
     };
