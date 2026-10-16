@@ -1,0 +1,12 @@
+[package]
+name = "exercise-7"
+description = "The major has tasked you with finding a suitable circuit for a F1 race."
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+itertools = "0.15.0"
+strum = "0.28.0"
+strum_macros = "0.28.0"
+z3 = "0.21.1"
