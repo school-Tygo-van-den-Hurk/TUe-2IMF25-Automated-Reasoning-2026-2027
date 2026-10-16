@@ -18,59 +18,89 @@ assembled the following requirements for the route:
 
 The city layout looks like:
 
-\begin{tikzpicture}[x=1cm,y=1cm,
-  every node/.style={font=\large},
-  v/.style={circle,fill,inner sep=1.5pt},
-  line/.style={thick}]
+\begin{tikzpicture}[x=0.8cm,y=0.8cm,
+  v/.style={circle,fill,inner sep=1.4pt},
+  line/.style={thick,blue!60!black}]
 
-% ---- edges ----
-% outer left side and bottom
-\draw[line] (0,0) -- (0,-10) -- (5,-10) -- (5,-9) -- (2,-9) -- (2,-5) -- (4,-5);
+% ---- outer frame ----
+\draw[line] (0,0) -- (6,0);
+\draw[line] (0,0) -- (0,-10) -- (5,-10);
+\draw[line] (6,0) -- (6,-8);
 
-% top edge and right long vertical
-\draw[line] (0,0) -- (6,0) -- (6,-8) -- (4,-8) -- (4,-7);
+% ---- top / upper middle ----
+\draw[line] (4,0) -- (4,-6);
+\draw[line] (2,0) -- (2,-4);
+\draw[line] (3,-0.5) -- (5,-0.5) -- (6,-2);
+\draw[line] (3,-0.5) -- (3,-4);
+\draw[line] (3,-0.5) -- (2,-3);
+\draw[line] (3,-3) -- (5,-3) -- (5,-4) -- (7,-4);
+\draw[line] (3,-4) -- (0,-4);
 
-% central vertical
-\draw[line] (4,0) -- (4,-6) -- (5,-6) -- (5,-8);
-
-% horizontal through the lower middle, out to the right box
-\draw[line] (2,-7) -- (8,-7) -- (8,-2) -- (6,-2);
-
-% central square lower part
-\draw[line] (4,-7) -- (4,-8);
-
-% small box right of centre
-\draw[line] (4,-3) -- (5,-3) -- (5,-4) -- (6,-4);
-
-% upper-left structure
-\draw[line] (2,0) -- (2,-4) -- (0,-4);
-\draw[line] (2,-4) -- (3,-4) -- (3,-3) -- (4,-3);
-\draw[line] (0,-2) -- (1,-2);
+% ---- upper left ----
 \draw[line] (1,-1) -- (2,-1);
 \draw[line] (1,-1) -- (1,-3) -- (2,-3);
+\draw[line] (0,-2) -- (1,-2);
+\draw[line] (1,-3) -- (0,-4);
+
+% ---- right side ----
+\draw[line] (6,-2) -- (8,-2) -- (8,-7);
+\draw[line] (6,-4) -- (7,-6);
+\draw[line] (7,-4) -- (7,-7);
+\draw[line] (7,-6) -- (8,-6);
+\draw[line] (6,-7) -- (8,-7);
+\draw[line] (8,-7) -- (9,-8) -- (9,-10) -- (8,-11) -- (7,-12) -- (4,-12);
+\draw[line] (8,-7) -- (8,-9) -- (7,-10) -- (8,-11);
+\draw[line] (7,-10) -- (7,-12);
+\draw[line] (7,-10) -- (5,-9) -- (2,-9);
+\draw[line] (5,-9) -- (5,-10);
+
+% ---- centre ----
+\draw[line] (2,-5) -- (4,-5);
+\draw[line] (2,-5) -- (2,-9);
+\draw[line] (2,-7) -- (4,-7) -- (6,-7);
+\draw[line] (4,-6) -- (5,-6) -- (6,-7);
+\draw[line] (5,-6) -- (5,-8);
+\draw[line] (4,-7) -- (4,-8) -- (6,-8);
+\draw[line] (4,-7) -- (5,-8);
+
+% ---- left middle ----
+\draw[line] (0,-5) -- (1,-5) -- (1,-6) -- (0.5,-6) -- (0.5,-5);
+\draw[line] (1,-6) -- (0,-7) -- (1,-7) -- (1,-6);
+\draw[line] (0,-7) -- (1,-8) -- (0,-10);
+
+% ---- bottom ----
+\draw[line] (3,-10) -- (3,-12) -- (2,-12) -- (2,-11) -- (3,-12);
+\draw[line] (3,-10) -- (4,-11) -- (5,-10);
+\draw[line] (4,-11) -- (4,-12);
+\draw[line] (0,-10) -- (2,-12);
+\draw[line] (3,-12) -- (4,-12);
 
 % ---- vertices ----
 \foreach \p in {(0,0),(2,0),(4,0),(6,0),
-                (2,-1),(1,-1),
-                (0,-2),(1,-2),(6,-2),(8,-2),
-                (1,-3),(2,-3),(3,-3),(4,-3),(5,-3),
-                (0,-4),(2,-4),(3,-4),(5,-4),(6,-4),
-                (2,-5),(4,-5),
-                (4,-6),(5,-6),
-                (0,-7),(2,-7),(4,-7),(5,-7),(6,-7),(8,-7),
-                (4,-8),(5,-8),(6,-8),
-                (2,-9),(5,-9),
-                (0,-10),(5,-10)}
+  (3,-0.5),(5,-0.5),(1,-1),(2,-1),
+  (0,-2),(1,-2),(6,-2),(8,-2),
+  (1,-3),(2,-3),(3,-3),(4,-3),(5,-3),
+  (0,-4),(2,-4),(3,-4),(5,-4),(6,-4),(7,-4),
+  (0,-5),(0.5,-5),(1,-5),(2,-5),(4,-5),(0.5,-6),(1,-6),
+  (4,-6),(5,-6),(7,-6),(8,-6),
+  (0,-7),(1,-7),(2,-7),(4,-7),(5,-7),(6,-7),(7,-7),(8,-7),
+  (1,-8),(4,-8),(5,-8),(6,-8),(9,-8),
+  (2,-9),(5,-9),(8,-9),
+  (0,-10),(3,-10),(5,-10),(7,-10),(9,-10),
+  (1,-11),(2,-11),(3,-11),(4,-11),(8,-11),
+  (2,-12),(3,-12),(4,-12),(7,-12)}
   \node[v] at \p {};
 
-% ---- labels ----
-\node at (6.3,0.1)   {I};
-\node at (1.3,-1.4)  {I};
-\node at (5.3,-2.9)  {I};
-\node at (0.3,-7.2)  {I};
-\node at (2.3,-7.2)  {I};
-\node at (5.3,-10.1) {I};
-\node[anchor=west] at (4.15,-5) {Start};
+% ---- "I" labels ----
+\node at (6.4,0.1)   {I};
+\node at (1.4,-1.3)  {I};
+\node at (5.4,-2.9)  {I};
+\node at (7.4,-3.9)  {I};
+\node at (-0.4,-7.2) {I};
+\node at (2.3,-7.3)  {I};
+\node at (5.4,-10)   {I};
+\node at (9.4,-10.2) {I};
+\node at (3.2,-12.4) {I};
 \end{tikzpicture}
 
 \subsection{Solution}
@@ -78,7 +108,7 @@ The city layout looks like:
 
 \newcommand\ite[3]{\mathtt{ite}(#1,#2,#3)}
 
-We introduce the variables
+We identify the variables
 
 \begin{itemize}
 \item $m = 4$ is the amount of minimum point of interests the track 'visits'
@@ -87,46 +117,37 @@ We introduce the variables
 \item $b = 24$ is the maximum amount of corners
 \item $l = 1500m$ is the minimum length of the track
 \item $k = 6000m$ is the maximum length of the track
-\item $\alpha_{v,s} \in \mathbb{B}$ representing wether the intersection is the $s^{th}$ intersection on the track.
-\item $\beta_v \in \mathbb{B}$ representing wether the intersection is a special location
-\item $\delta_{v,v'} \in \mathbb{N}$ representing the distance between $v$ and $v'$
-\item $c_{v,v'} \in \mathbb{N}$ representing the cost of the road between $v$ and $v'$
+\item $\alpha_{e} \in \mathbb{B}$ representing whether the road $e$ is part of the track
+\item $\beta_{e,e'} \in \mathbb{B}$ representing whether the roads $e$, and $e'$ contain a point of intertests
+\item $\delta_{e} \in \mathbb{N}$ representing the distance of the road $e$
+\item $\gamma_{e,e'} \in \mathbb{N}$ representing whether there is a corner between $e$ and $e'$
 
 \end{itemize}
 
 \subsubsection{Sets}
 \begin{itemize}
 \item The set of intersections: $V$
-\item The set of points of intertests: $S \subset V$
-\item Start and end position: $s_0 \in V$ 
+\item The set of intersections adjecent to edge $e$: $V_e$
+\item The set of roads adjecent to intersection $v$: $E_v$
+\item The set of points of intertests: $S \subseteq V$
 \end{itemize}
-We set the start and end position to true $\alpha_{s_0, 0} \wedge \alpha_{s_0, s}$
 
-
-A intersection cannot be in the track multiple times except $s_0$
+The track does not cross it self, that is each intersection has either 0 or 2 roads on the track
 \[
-\bigwedge_{v \in V}(v \neq s_0 \Rightarrow \sum_{0 \leq i < s} \ite{\alpha_{v,s}}{1}{0} \leq 1)
-\]
-Intersection $s_0$ must be in the track twice
-\[
-\sum_{0 \leq i < s} \ite{\alpha_{s_0,i}}{1}{0} = 2
-\]
-the $s^{th}$ intersection is the only insertection at step $s$
-\[
-\bigwedge_{0 \leq i < s}(\sum_{v \in V} \ite{\alpha_{v,i}}{1}{0} \leq 1)
+	\bigwedge_{v \in V} (\sum_{e \in E_v} \ite{\alpha_e}{1}{0} = 0 \vee \sum_{e \in V_e} \ite{\alpha_e}{1}{0} = 2)
 \]
 The track visits at least $m$ special locations
 \[
-\sum_{0 \leq i < s}(\sum_{v \in V} \ite{\alpha_{v,i} \wedge \beta_v}{1}{0}) \ge m
+\sum_{(e,e') \in E \times E}(\ite{\alpha_{e} \wedge \alpha_{e'} \wedge \beta_{e,e'}}{1}{0}) \ge m
 \]
 There are between $a$ and $b$ corners
 \[
-a \leq \sum_{2\leq i \le s}(\sum_{(v,v',v'') \in V} \ite{\alpha_{v,i-2} \wedge \alpha_{v', i-1} \wedge \alpha_{}}{1}{0}) \leq b
+a \leq \sum_{(e,e') \in E \times E} \ite{\alpha_{e} \wedge \alpha_{e'} \wedge \gamma_{e,e'}}{1}{0}) \leq b
 \]
 
 The track length is between $k$ and $l$
 \[
-k \leq \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{\delta_{v,v'}}{0} \leq l
+k \leq \sum_{e \in E} \ite{\alpha_{e} }{\delta_{e}}{0} \leq l
 \]
 
 
