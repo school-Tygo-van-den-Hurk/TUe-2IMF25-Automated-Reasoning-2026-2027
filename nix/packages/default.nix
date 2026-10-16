@@ -5,6 +5,7 @@
     ./exercise-4.nix
     ./exercise-6.nix
     ./report.nix
+    ./zip.nix
   ];
 
   perSystem = { pkgs, ... }: {
