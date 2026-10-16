@@ -1,0 +1,20 @@
+[project]
+name = "exercise-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "readme.md"
+authors = [
+    { name = "Tygo van den Hurk", email = "91738110+Tygo-van-den-Hurk@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "z3-solver>=5.3.1.0",
+]
+
+[project.scripts]
+exercise-2 = "exercise_2.main:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"

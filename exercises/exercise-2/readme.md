@@ -1,5 +1,9 @@
 # PCB layout
 
+## How to Run
+
+TODO...
+
 ## Assignment
 
 Modern foldable phones contain multiple printed circuit boards (PCBs), usually
