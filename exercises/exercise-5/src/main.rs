@@ -1,3 +1,4 @@
+use ::clap::Parser;
 use ::oxidd::BooleanFunction;
 use ::oxidd::Function;
 use ::oxidd::Manager;
@@ -5,17 +6,16 @@ use ::oxidd::util::SatCountCache;
 use ::oxidd::util::num::Natural;
 use ::std::collections::HashMap;
 use ::std::collections::hash_map::RandomState;
-use ::clap::Parser;
 
+mod data;
 pub mod dimacs;
 pub mod minimal;
 mod parser;
-mod data;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Name of a builtin dataset (buildroot, busybox, embtoolkit, toybox, 
+    /// Name of a builtin dataset (buildroot, busybox, embtoolkit, toybox,
     /// uClinux) or file path
     #[arg(default_value = "buildroot")]
     dataset: String,

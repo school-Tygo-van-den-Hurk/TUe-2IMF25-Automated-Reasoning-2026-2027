@@ -17,32 +17,31 @@ pub const U_CLINUX: &str = include_str!("../data/uClinux.dimacs");
 /// disk instead.
 pub fn get_dimacs(dataset: &str) -> String {
     match &dataset.to_lowercase() as &str {
-
         "buildroot" | "build_root" | "build-root" => {
             println!("using builtin dataset: 'buildroot'");
             BUILD_ROOT.to_owned()
-        },
-        
-        "busybox"  => {
+        }
+
+        "busybox" => {
             println!("using builtin dataset: 'busybox'");
             BUSYBOX.to_owned()
-        },
+        }
 
         "embtoolkit" | "emb_toolkit" | "emb-toolkit" => {
             println!("using builtin dataset: 'embtoolkit'");
             EMBTOOLKIT.to_owned()
-        },
+        }
 
         "toybox" => {
             println!("using builtin dataset: 'toybox'");
             TOYBOX.to_owned()
-        },
+        }
 
         "uclinux" | "u_clinux" | "u-clinux" => {
             println!("using builtin dataset: 'uClinux'");
             U_CLINUX.to_owned()
-        },
-        
+        }
+
         _otherwise => {
             print!("No such dataset known internally: '{dataset}',");
             println!("attempting to read from disk instead.");
