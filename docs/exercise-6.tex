@@ -1,0 +1,124 @@
+\section{Exercise 6}
+
+    In this exercise, we analyze directed graphs using Binary Decision Diagrams
+    (BDDs). These graphs are obtained from social networks extracted from Pokec
+    (a Slovakian social network) and Twitter. All nodes within these directed
+    graphs are labeled with $0$ or $1$. The total number of nodes and
+    transitions is stated in the table below:
+
+    $$ 
+    \begin{array}{lcc} \hline \textbf{Graph} & \textbf{\#Nodes} &
+        \textbf{\# Transitions} \\ \hline 
+    \text{Pokec Small} & 99999 & 1768496 \\ 
+    \text{Pokec Medium} & 499999 & 13225726\\ 
+    \text{Pokec} & 1632803 & 30622564 \\ 
+    \text{Twitter Congress} &  475 & 13289 \\ \hline 
+    \end{array}
+    $$
+
+    To analyze these graphs we require three specific BDDs, namely:
+
+    \begin{itemize}
+        \item A BDD that represents the nodes with label $0$
+        \item A BDD that represents the nodes with label $1$
+        \item A BDD that represents the transitions from a source node to a
+            target node
+    \end{itemize}
+
+    \subsection{Results:}
+        
+        \subsubsection{Exercise A:}
+            We construct the BDDs as follows:
+
+            \begin{itemize}
+                \item Let $N$ be the set of nodes.
+                \item Let $T$ be the set of transitions.
+                \item Let $S$ be the number of nodes.
+                \item Let $l$ be the length of the encoding calculated by:
+                \[
+                l = \lceil \log_2(S) \rceil
+                \]
+            \end{itemize}
+
+            \begin{itemize}
+                \item Let $L(n)$ be the $0/1$-label for node $n$.
+                \item Let $\text{enc}(n)$ be an encoding function that encodes
+                    the identifier for node $n$ to $l$ number of bits.
+                \item Let $\text{source}(t)$ be the source node of transition
+                    $t$.
+                \item Let $\text{target}(t)$ be the target node of transition
+                    $t$.
+            \end{itemize}
+
+            Below are the three BDD's constructed by their corresponding CNF
+            formulas:
+
+            \begin{itemize}
+                \item $BDD_0 :$
+                \[
+                    \bigvee_{n \in S \land L(n) = 0} \bigwedge_{x \in enc(n)}x
+                \]
+                \item $BDD_1 :$
+                \[
+                    \bigvee_{n \in S \land L(n) = 1} \bigwedge_{x \in enc(n)}x
+                \]
+                \item $BDD_T :$
+                \[
+                    \bigvee_{t \in T}( (\bigwedge_{x \in enc(source(t))}x )
+                    \land(\bigwedge_{x' \in enc(target(t))}x'))
+                \]
+            \end{itemize}
+
+            Resulting in BDDs with the following number of nodes:
+
+            \begin{table}[h]
+                \centering
+                \begin{tabular}{l c c c c}
+                    \toprule
+                    & Pokec Small & Pokec Medium & Pokec & Twitter Congress \\
+                    \midrule
+                    $BDD_0$ & 12271 & 52746 & 137785 & 9 \\
+                    $BDD_1$ & 12271 & 52747 & 137787 & 17 \\
+                    $BDD_T$ & 3560 & 11211 & 59438 & 37 \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+
+            With these BDDs, we can look up a specific node label or determine
+            whether a transition exists in $O(l)$ time. Having these three BDDs
+            to represent the direct graph allows us to analyze these graphs in
+            the following two exercises.
+
+        \subsubsection{Exercises B \& C:}
+
+            For exercise $B$, we find the number of reachable nodes, and for
+            exercise $C$, we find the number of reachable nodes along an
+            $0/1$-alternating path. For both, we use the node with ID $1$ as
+            the starting node. The table below reports our results for all
+            graphs with their running times.
+
+            \begin{table}[h]
+                \centering
+                \vspace{0.25cm}
+                \begin{tabular}{l c c c c}
+                    \toprule
+                    \textbf{Metric} & \textbf{Pokec Small} &
+                    \textbf{Pokec Medium} & \textbf{Pokec} &
+                    \textbf{Twitter Congress} \\
+                    \midrule
+                    \#Nodes & 
+                    99999 & 499999 & 1632803 & 475 \\
+                    \#Transitions & 
+                    1768496 & 13225726 & 30622564 & 13289 \\
+                    \#Nodes Reachable from $1$ & 
+                    99998 & 499998 & 1632802 & 474 \\
+                    Running Time &
+                    1.205781 s & 13.080146 s & 32.543689 s & 0.006385 s \\
+                    \addlinespace
+                    \#Nodes Reachable by a $0/1$-Path &
+                    42026 & 197222 & 552525 & 383 \\
+                    Running Time & 
+                    3.519633 s & 22.104163 s & 82.379408 s & 0.008883 s \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
