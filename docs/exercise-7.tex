@@ -9,23 +9,31 @@ For that we need to find an optimal circuit through the city, subject to the fol
   \item The circuit must contain between $c_{\min}$ and $c_{\max}$ corners.
   \item As the cars race 50 laps, the start and end location must coincide, i.e.\ the circuit is a single closed loop.
   \item Some roads require renovation before the race may use them, due to time at most $3$ roads may be renovated.
+  \item For each district that the track runs through a permit needs to be bought.
   \item The total cost of the race (permits and renovations) must be minimized.
 \end{itemize}
-an overview has been given of all the roads, the points of interests are colored in blue, the roads that would need to be renovated are colored in red.
+an overview has been given of all the roads, the points of interests are colored in blue, the roads that would need to be renovated are colored in red, and the district costs are provided in bold.
 
 \begin{figure}
 \centering
 \caption{Layout of \texttt{SAT City}}
 \newcommand{\baseunit}{50}   % metres per grid square
 \newcommand{\gs}{0.8}        % drawing scale: cm per grid square
+% district cost = round( (costbase + costperarea * area_in_squares) * multiplier )
+\newcommand{\costbase}{4}      % cost of a district of area 0
+\newcommand{\costperarea}{2}    % extra cost per grid square of area
+\newcommand{\costmax}{100}   
 % =========================================
+\pgfdeclarelayer{labels}
+\pgfsetlayers{main,labels} 
 
 \begin{tikzpicture}[x=0.8 cm,y=0.8 cm,
   v/.style={circle,fill,inner sep=1.4pt},
   I/.style={circle,fill,blue,inner sep=1.4pt},
   line/.style={thick,black!60!black},
   line-broken/.style={thick,red!100!black},
-  lbl/.style={fill=white,inner sep=1pt,font=\tiny}]
+	lbl/.style={fill=white,inner sep=1pt,font=\tiny},
+  dlbl/.style={font=\scriptsize\bfseries,text=black!80,inner sep=0pt}]
 
 % \edge[style]{start}{end}: draws the segment and labels its length in metres
 \newcommand{\edge}[3][line]{\edgeA[#1]#2#3}
@@ -36,12 +44,54 @@ an overview has been given of all the roads, the points of interests are colored
     node[midway,lbl] {\pgfmathprintnumber[fixed,precision=0]{\elen}};}
 \newcommand{\bedge}[2]{\edge[line-broken]{#1}{#2}}
 
+\newcommand{\district}[5]{%
+  \pgfmathtruncatemacro{\dcost}{round((\costbase+\costperarea*#2)*#3)}%
+  \pgfmathsetmacro{\dpct}{min(100,\dcost/\costmax*100)}%
+  \fill[orange!\dpct!white] #4 -- cycle;
+  \begin{pgfonlayer}{labels}\node[dlbl] at #5 {\dcost};\end{pgfonlayer}}
+
+ 
+% ---- districts (drawn first, underneath the edges) ----
+% multiplier 1 = normal; 3 = high-cost district
+\district{1}{1.75}{1}{(4,0) -- (6,0) -- (6,-2) -- (5,-0.5) -- (4,-0.5)}{(5.75,-1.25)}
+\district{2}{3}{1}{(0,0) -- (2,0) -- (2,-1) -- (1,-1) -- (1,-2) -- (0,-2)}{(1,-0.5)}
+\district{3}{2.25}{1}{(2,0) -- (4,0) -- (4,-0.5) -- (3,-0.5) -- (2,-3)}{(2.25,-2)}
+\district{4}{2.5}{1}{(4,-0.5) -- (4,-3) -- (3,-3) -- (3,-0.5)}{(3.5,-1.75)}
+\district{5}{2}{1}{(2,-1) -- (2,-3) -- (1,-3) -- (1,-1)}{(1.5,-1.5)}
+\district{6}{5.25}{1}{(6,-2) -- (6,-4) -- (5,-4) -- (5,-3) -- (4,-3) -- (4,-0.5) -- (5,-0.5)}{(5,-2.5)}
+\district{7}{2.25}{1}{(2,-4) -- (2,-3) -- (3,-0.5) -- (3,-4)}{(2.75,-1.75)}
+\district{8}{1.5}{1}{(0,-4) -- (0,-2) -- (1,-2) -- (1,-3)}{(0.5,-2.5)}
+\district{9}{1.5}{1}{(2,-3) -- (2,-4) -- (0,-4) -- (1,-3)}{(1.25,-3.5)}
+\district{10}{6}{1}{(6,-4) -- (6,-2) -- (8,-2) -- (8,-6) -- (7,-6) -- (7,-4)}{(7,-3)}
+\district{11}{1}{1}{(6,-4) -- (7,-4) -- (7,-6)}{(6.75,-5)}
+\district{12}{5.5}{3}{(6,-4) -- (6,-7) -- (5,-6) -- (4,-6) -- (4,-3) -- (5,-3) -- (5,-4)}{(5,-4.5)}
+\district{13}{0.5}{1}{(0.5,-5) -- (1,-5) -- (1,-6) -- (0.5,-6)}{(0.75,-5.5)}
+\district{14}{1}{1}{(0,-7) -- (0,-5) -- (0.5,-5) -- (0.5,-6) -- (1,-6)}{(0.25,-5.5)}
+\district{15}{2}{1}{(6,-7) -- (6,-4) -- (7,-6) -- (7,-7)}{(6.25,-5)}
+\district{16}{5}{1}{(4,-5) -- (4,-6) -- (5,-6) -- (5,-7) -- (2,-7) -- (2,-5)}{(3,-5.5)}
+\district{17}{1}{1}{(8,-6) -- (8,-7) -- (7,-7) -- (7,-6)}{(7.5,-6.5)}
+\district{18}{0.5}{1}{(0,-7) -- (1,-6) -- (1,-7)}{(0.75,-6.5)}
+\district{19}{0.5}{1}{(6,-7) -- (5,-7) -- (5,-6)}{(5.25,-6.5)}
+\district{20}{14.5}{1}{(0,-5) -- (0,-4) -- (3,-4) -- (3,-3) -- (4,-3) -- (4,-5) -- (2,-5) -- (2,-9) -- (5,-9) -- (5,-10) -- (0,-10) -- (1,-8) -- (0,-7) -- (1,-7) -- (1,-5)}{(1.5,-6.5)}
+\district{21}{0.5}{1}{(4,-7) -- (5,-7) -- (5,-8)}{(4.75,-7.5)}
+\district{22}{1}{1}{(6,-7) -- (6,-8) -- (5,-8) -- (5,-7)}{(5.5,-7.5)}
+\district{23}{0.5}{1}{(4,-8) -- (4,-7) -- (5,-8)}{(4.25,-7.5)}
+\district{24}{11.5}{1}{(6,-8) -- (6,-7) -- (8,-7) -- (8,-9) -- (7,-10) -- (5,-9) -- (2,-9) -- (2,-7) -- (4,-7) -- (4,-8)}{(5,-8.5)}
+\district{25}{1.5}{1}{(0,-10) -- (0,-7) -- (1,-8)}{(0.25,-9)}
+\district{26}{4}{3}{(8,-7) -- (9,-8) -- (9,-10) -- (8,-11) -- (7,-10) -- (8,-9)}{(8.5,-8.5)}
+\district{27}{1}{1}{(3,-10) -- (5,-10) -- (4,-11)}{(4,-10.5)}
+\district{28}{3.5}{1}{(0,-10) -- (3,-10) -- (3,-12) -- (2,-11) -- (2,-12)}{(1.75,-10.5)}
+\district{29}{6.5}{1}{(7,-12) -- (4,-12) -- (4,-11) -- (5,-10) -- (5,-9) -- (7,-10)}{(5.75,-10.5)}
+\district{30}{1}{1}{(8,-11) -- (7,-12) -- (7,-10)}{(7.25,-10.5)}
+\district{31}{1.5}{1}{(3,-12) -- (3,-10) -- (4,-11) -- (4,-12)}{(3.25,-10.5)}
+\district{32}{0.5}{1}{(3,-12) -- (2,-12) -- (2,-11)}{(2.25,-11.5)}
 % ---- outer frame ----
 \edge{(0,0)}{(2,0)}   \edge{(2,0)}{(4,0)}   \edge{(4,0)}{(6,0)}
 \edge{(0,0)}{(0,-2)}  \edge{(0,-2)}{(0,-4)} \bedge{(0,-4)}{(0,-5)}
 \edge{(0,-5)}{(0,-7)} \edge{(0,-7)}{(0,-10)}
 \edge{(0,-10)}{(3,-10)} \edge{(3,-10)}{(5,-10)}
 \edge{(6,0)}{(6,-2)}  \edge{(6,-2)}{(6,-4)} \edge{(6,-4)}{(6,-7)} \edge{(6,-7)}{(6,-8)}
+
 
 % ---- top / upper middle ----
 \edge{(4,0)}{(4,-0.5)} \bedge{(4,-0.5)}{(4,-3)}
@@ -141,14 +191,14 @@ We identify the following parameters of the problem:
   \item $l = 1200$\,m is the minimum length of the track.
   \item $k = 4000$\,m is the maximum length of the track.
   \item $\delta_e \in \mathbb{N}$ is the length of road $e$.
-  \item $pc_b \in \mathbb{N}$ is the permit cost of block $b$.
+  \item $pc_d \in \mathbb{N}$ is the permit cost of district $d$.
 \end{itemize}
 
 We use the following sets:
 \begin{itemize}
   \item $V$ is the set of intersections and $E$ is the set of roads.
-  \item $B$ is the set of street blocks.
-  \item $E_b$ is the set of roads adjacent to block $b$.
+  \item $D$ is the set of districts.
+  \item $E_d$ is the set of roads adjacent to district $d$.
   \item $E_v$ is the set of roads adjacent to intersection $v$.
   \item $R \subseteq E$ is the set of roads that need to be renovated.
 \end{itemize}
@@ -158,7 +208,7 @@ To construct the track, we introduce the following variables:
   \item $\alpha_e \in \mathbb{B}$ for $e \in E$: true iff road $e$ is part of the track.
   \item $\beta_{e,e'} \in \mathbb{B}$ for $e,e' \in E$: true iff the roads $e$ and $e'$ contain a point of interest.
   \item $\gamma_{e,e'} \in \mathbb{B}$ for $e,e' \in E$: true iff there is a corner between $e$ and $e'$.
-  \item $p_b \in \mathbb{B}$ for $b \in B$: true iff the permit for block $b$ must be paid.
+  \item $p_d \in \mathbb{B}$ for $d \in D$: true iff the permit for district $d$ must be paid.
 \end{itemize}
 
 
@@ -195,21 +245,22 @@ k \leq \sum_{e \in E} \ite{\alpha_{e} }{\delta_{e}}{0} \leq l
 
 \paragraph{Permits.}
 A block needs a permit if an adjacent road is part of the track.
-For every block $B$ this is expressed by
+For every district $d$ this is expressed by
 \[
-  \bigwedge_{e \in E_B} (\alpha_e \Rightarrow p_B).
+  \bigwedge_{e \in E_d} (\alpha_e \Rightarrow p_d).
 \]
 
 \paragraph{Objective.}
 We minimize the cost of the permits and the renovations (10 per metre):
 \[
  \text{minimize} \quad
- \big( \sum_{b \in B} \ite{p_b}{pc_b}{0} \big) + 
+ \big( \sum_{d \in D} \ite{p_d}{pc_d}{0} \big) + 
  \big( \sum_{e \in R} \ite{\alpha_e}{10 \cdot \delta_e}{0}\big)
 \]
 
 
 
 \subsection{Result}
+Due to time constraints we were not able to finish the implementation for the problem.
 
 \endgroup
