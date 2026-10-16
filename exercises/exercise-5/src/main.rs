@@ -5,34 +5,33 @@ use ::oxidd::util::SatCountCache;
 use ::oxidd::util::num::Natural;
 use ::std::collections::HashMap;
 use ::std::collections::hash_map::RandomState;
-use ::std::env;
-use ::std::process;
+use ::clap::Parser;
 
 pub mod dimacs;
 pub mod minimal;
 mod parser;
+mod data;
 
-fn print_usage() {
-    println!("exercise-5 <.dimac file>");
-    process::exit(1);
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Name of a builtin dataset (buildroot, busybox, embtoolkit, toybox, 
+    /// uClinux) or file path
+    #[arg(default_value = "buildroot")]
+    dataset: String,
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        print_usage();
-    }
-    let manager_ref = oxidd::bdd::new_manager(8_000_000, 4_000_000, 4);
-
-    let file_path = &args[1];
-    let file_content = std::fs::read_to_string(file_path).expect("could not open file");
-    let dimacs = parser::parse(file_content).expect("could not parse file");
+    let args = Args::parse();
+    let file_content = data::get_dimacs(&args.dataset);
+    let dimacs = parser::parse(file_content).expect("could not parse dataset");
 
     println!(
         "Processing: {}, has {} variables",
-        file_path, dimacs.variable_count
+        args.dataset, dimacs.variable_count
     );
 
+    let manager_ref = oxidd::bdd::new_manager(8_000_000, 4_000_000, 4);
     let (formula, vars) = dimacs.to_bdd(&manager_ref).expect("could not make bdd");
     let mut cost_cache = HashMap::new();
 

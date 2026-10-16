@@ -116,7 +116,7 @@ Describe your implementations, how you find the required minimum valid
 configurations, and how you create the BDDs.
 
 Test your implementations on the five configurable systems provided as DIMACS
-files in the `conf-dimacs` directory.
+files in the `data` directory.
 
 For each of the five systems, report the following:
 

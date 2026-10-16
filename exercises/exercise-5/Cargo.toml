@@ -2,8 +2,15 @@
 name = "exercise-5"
 version = "0.1.0"
 edition = "2024"
+description = """
+Constructs binary decision diagrams (BDDs) to represent valid software
+configurations and find minimum valid configurations, including configurations
+with essential features. Evaluates the implementations on five configurable
+systems provided as DIMACS files.
+"""
 
 [dependencies]
+clap = { version = "4", features = ["derive"] }
 oxidd = "0.13.0"
 oxidd-rules-bdd = "0.13.0"
 oxidd-parser = "0.5.0"
