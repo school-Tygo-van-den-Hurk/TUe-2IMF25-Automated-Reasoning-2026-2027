@@ -1,22 +1,26 @@
-\section{Exercise 3: Food Supply}
-
-    \subsection{Approach}
-
-        When I started I did not know how I was supposed to solve this. I could
-        not see a way to dynamically run more steps in z3. The trick is to
-        realize you do not need to. You can dynamically build a solver for $1,
-        2, ... n$ until you find what you're looking for. When I figured that
-        out it wasn't that hard anymore.
-        
-        I then created a lot of util functions and types to make implementing
-        the assertions easier. When I didn't really knew how to implement the
-        code I went back to the report to instead do it as logic formulas.
-        This was easier to implement then code because of the lack of overhead
-        of those very types.
-
-        When the logic was finished in the report, it was then really easy to
-        implement the same assertions as code using those helper types.
-    \subsection{Implementation}
+\section{Problem 3: Food Supply}
+Three villages depend on a truck for food deliveries while consuming food continuously.
+Determine how long they can survive with the original truck capacity and whether increasing its capacity allows them to be supplied indefinitely.
+	% We dont really need to add the process, and how/what order we implemented it
+	% This subsection is just that so I'll just comment it out
+	% 
+	% \subsection{Approach}
+	% 
+	% When I started I did not know how I was supposed to solve this. I could
+	% not see a way to dynamically run more steps in z3. The trick is to
+	% realize you do not need to. You can dynamically build a solver for $1,
+	% 2, ... n$ until you find what you're looking for. When I figured that
+	% out it wasn't that hard anymore.
+	% 
+	% I then created a lot of util functions and types to make implementing
+	% the assertions easier. When I didn't really knew how to implement the
+	% code I went back to the report to instead do it as logic formulas.
+	% This was easier to implement then code because of the lack of overhead
+	% of those very types.
+	% 
+	% When the logic was finished in the report, it was then really easy to
+	% implement the same assertions as code using those helper types.
+    \subsection{Solutions}
         
         \subsubsection{constants}
             \begin{itemize}

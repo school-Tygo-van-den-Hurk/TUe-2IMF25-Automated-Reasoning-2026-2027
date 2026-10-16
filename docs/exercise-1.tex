@@ -4,30 +4,36 @@
 \newcommand{\Skipples}{\texttt{Skipples}}
 \newcommand{\Crottles}{\texttt{Crottles}}
 
-\section{Exercise 1: Magic Factory}
+\section{Problem 1: Magic Factory}
+Six trucks must deliver different types of building blocks to a magic factory while respecting weight, capacity, and handling constraints.
+Find a way to distribute the goods to maximize the number of dupples delivered in a single run.
 
-    \subsection{Approach}
 
-        I started out by modeling the products first, so I made an enum and
-        gave it properties such as name, weight, and required amount. Then
-        all I had to do was iterate over them and creating variables using
-        the weight and the required amount for each product.
+	% We dont really need to add the process, and how/what order we implemented it
+	% This subsection is just that so I'll just comment it out
+    	%
+    	% \subsection{Approach}
+    	
+        % I started out by modeling the products first, so I made an enum and
+        % gave it properties such as name, weight, and required amount. Then
+        % all I had to do was iterate over them and creating variables using
+        % the weight and the required amount for each product.
 
-        Next, I started with the trucks. Trucks have a maximum weight they can
-        carry, plus an amount for each product they're carrying. So I added
-        those two fields and made the variables for: the total weight in the
-        truck, the amount of product $p_1$, the amount for product $p_2$, ...
-        
-        To finish the trucks off I just had to assert that the weight is
-        between 0 and the max capacity, and that it is equal to the sum of
-        the weights of the products being transported. And finally the amount
-        of products being transported had to be less the 10.
+        % Next, I started with the trucks. Trucks have a maximum weight they can
+        % carry, plus an amount for each product they're carrying. So I added
+        % those two fields and made the variables for: the total weight in the
+        % truck, the amount of product $p_1$, the amount for product $p_2$, ...
+        % 
+        % To finish the trucks off I just had to assert that the weight is
+        % between 0 and the max capacity, and that it is equal to the sum of
+        % the weights of the products being transported. And finally the amount
+        % of products being transported had to be less the 10.
 
-        The last part was just asserting a couple more global constraints. Like
-        how the total amount of a product being transported is the same as the
-        sum of what the trucks are transporting.
+        % The last part was just asserting a couple more global constraints. Like
+        % how the total amount of a product being transported is the same as the
+        % sum of what the trucks are transporting.
 
-    \subsection{Implementation}
+    \subsection{Solution}
 
         \subsubsection{constants}
             \begin{itemize}
@@ -103,7 +109,7 @@
             \end{itemize}
         
         \subsubsection{Assertions}
-            For the total amount of product $p$ being transported I created the
+            For the total amount of product $p$ being transported we created the
             following formulas:
 
             \begin{itemize}
@@ -195,14 +201,14 @@
                     \text{ and $p_2 = \Dupples$}
             \]
 
-            \noindent I did leave out all mentions of truck speed. I did this
+            \noindent We did leave out all mentions of truck speed. We did this
             on purpose as the driving speed does not affect the amount of
-            \Dupples\text{ } I can deliver and that would just slow the solver
+            \Dupples\text{ } it can deliver and that would just slow the solver
             down, and make it harder to implement.
 
     \subsection{Results}
 
-        The results were that both sub-questions were satisfiable. I've created
+        The results were that both sub-questions were satisfiable. We've created
         tables to help visualize the results.
 
         \subsubsection{Visualisation Exercise 1a}

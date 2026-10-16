@@ -1,5 +1,6 @@
-\section{Exercise 4}
-We are given a snippet of \texttt{c} code. Given that $k \in \{0..10\}$, we need to show that the program can crash or not.
+\section{Problem 4: Program Verification}
+A C program uses nondeterministic choices to update two variables before checking an assertion.
+Determine which values of $k$ can cause the program to crash and provide an execution for each possible crash.
 
 \subsection{Solution}
 We identify multiple parameters for the problem
@@ -105,15 +106,15 @@ The formula would carry the value over across the rest of the iterations. These 
 	\hline
 		\tabletitle{Trace for k = #1} \\
 	\hline
-		Iteration & $a$  & $b$ & Condition \\
+		Iter. & $a$  & $b$ & Condition \\
 	\hline}
-\caption{Traces}
+\caption{Traces for exercise 4}
 \label{tab:exercise4-traces}
 \def\false{ \texttt{False} }
 \def\true{\text{True}}
 	\def\tabletitle #1{\multicolumn{4}{c}{\cellcolor{black}\color{white}#1}}
 \centering
-\begin{tabular}{cc}
+\begin{tabular}{ccc}
 
 	\begin{tabular}[t]{|rrrr|}
 	\header{1}
@@ -148,7 +149,7 @@ The formula would carry the value over across the rest of the iterations. These 
 		\multicolumn{4}{|c|}{Left out for brevity} \\
 	\hline
 	\end{tabular}
-	\\
+	&
 	\begin{tabular}[t]{|rrrr|}
 	\header{5}
 		0  	  & 1   & 1    & -\\
@@ -163,7 +164,7 @@ The formula would carry the value over across the rest of the iterations. These 
 		\multicolumn{4}{|c|}{Left out for brevity} \\
 	\hline
 	\end{tabular}
-	& 
+	\\ 
 	\begin{tabular}[t]{|rrrr|}
 	\header{6}
 		0  	  & 1   & 1    & -\\
@@ -179,7 +180,7 @@ The formula would carry the value over across the rest of the iterations. These 
 	\hline
 	\end{tabular}
 
-	\\
+	&
 
 	\begin{tabular}[t]{|rrrr|}
 	\header{7}

@@ -1,9 +1,6 @@
-\section{Formula 1 Tracks}
-\textbf{Note: this section is a work in progress.}
-
+\section{Problem 7: Formula 1 Tracks}
 \texttt{SAT City} has been asked to host a race in the new Formula~1 season.
-The mayor has tasked you with finding an optimal circuit through the city,
-subject to the following requirements:
+For that we need to find an optimal circuit through the city, subject to the following requirements:
 \begin{itemize}
   \item The circuit must use existing roads only, no roads may be built and no buildings destroyed.
   \item The circuit must visit at least $m$ of the $n$ points of interest in the city.
@@ -14,9 +11,8 @@ subject to the following requirements:
   \item Some roads require renovation before the race may use them, due to time at most $3$ roads may be renovated.
   \item The total cost of the race (permits and renovations) must be minimized.
 \end{itemize}
-The mayor has provided a overview of all the roads.
-He has been kind enough to color the points of interests in blue, 
-and colored the roads that would need to be renovated to red.
+an overview has been given of all the roads, the points of interests are colored in blue, the roads that would need to be renovated are colored in red.
+
 \begin{figure}
 \centering
 \caption{Layout of \texttt{SAT City}}
@@ -142,8 +138,8 @@ We identify the following parameters of the problem:
   \item $n = 6$ is the total number of points of interest in the city.
   \item $a = 7$ is the minimum number of corners.
   \item $b = 24$ is the maximum number of corners.
-  \item $l = 1500$\,m is the minimum length of the track.
-  \item $k = 6000$\,m is the maximum length of the track.
+  \item $l = 1200$\,m is the minimum length of the track.
+  \item $k = 4000$\,m is the maximum length of the track.
   \item $\delta_e \in \mathbb{N}$ is the length of road $e$.
   \item $pc_b \in \mathbb{N}$ is the permit cost of block $b$.
 \end{itemize}
