@@ -1,0 +1,151 @@
+\section{Formula 1 Tracks}
+NOTE THIS section is a WORK IN PROGRESS
+The $ABC 123 XYZ$ city has been asked to be a location in new formula 1 season.
+The major has tasked you to find a optimal route throughout the city. They have
+assembled the following requirements for the route:
+\begin{itemize}
+\item All cars must use existing roads. The city does not wish to build more roads,
+  nor can they destroy existing buildings.
+\item You must visit $m$ out of $n$ special locations throughout the city.
+\item The length of the circuit must be between $k$ and $l$.
+\item To prevent injuries and deaths the circuit may never cross itself.
+\item It must have between $a$ and $b$ corners.
+\item As they need to race 50 laps around it, the start location and end location
+  need to be the same place. (The circuit needs to be a full circle.)
+\item For each street you need permits and possible renovations you are tasked to minimize the total cost for the race.
+
+\end{itemize}
+
+The city layout looks like:
+
+\begin{tikzpicture}[x=1cm,y=1cm,
+  every node/.style={font=\large},
+  v/.style={circle,fill,inner sep=1.5pt},
+  line/.style={thick}]
+
+% ---- edges ----
+% outer left side and bottom
+\draw[line] (0,0) -- (0,-10) -- (5,-10) -- (5,-9) -- (2,-9) -- (2,-5) -- (4,-5);
+
+% top edge and right long vertical
+\draw[line] (0,0) -- (6,0) -- (6,-8) -- (4,-8) -- (4,-7);
+
+% central vertical
+\draw[line] (4,0) -- (4,-6) -- (5,-6) -- (5,-8);
+
+% horizontal through the lower middle, out to the right box
+\draw[line] (2,-7) -- (8,-7) -- (8,-2) -- (6,-2);
+
+% central square lower part
+\draw[line] (4,-7) -- (4,-8);
+
+% small box right of centre
+\draw[line] (4,-3) -- (5,-3) -- (5,-4) -- (6,-4);
+
+% upper-left structure
+\draw[line] (2,0) -- (2,-4) -- (0,-4);
+\draw[line] (2,-4) -- (3,-4) -- (3,-3) -- (4,-3);
+\draw[line] (0,-2) -- (1,-2);
+\draw[line] (1,-1) -- (2,-1);
+\draw[line] (1,-1) -- (1,-3) -- (2,-3);
+
+% ---- vertices ----
+\foreach \p in {(0,0),(2,0),(4,0),(6,0),
+                (2,-1),(1,-1),
+                (0,-2),(1,-2),(6,-2),(8,-2),
+                (1,-3),(2,-3),(3,-3),(4,-3),(5,-3),
+                (0,-4),(2,-4),(3,-4),(5,-4),(6,-4),
+                (2,-5),(4,-5),
+                (4,-6),(5,-6),
+                (0,-7),(2,-7),(4,-7),(5,-7),(6,-7),(8,-7),
+                (4,-8),(5,-8),(6,-8),
+                (2,-9),(5,-9),
+                (0,-10),(5,-10)}
+  \node[v] at \p {};
+
+% ---- labels ----
+\node at (6.3,0.1)   {I};
+\node at (1.3,-1.4)  {I};
+\node at (5.3,-2.9)  {I};
+\node at (0.3,-7.2)  {I};
+\node at (2.3,-7.2)  {I};
+\node at (5.3,-10.1) {I};
+\node[anchor=west] at (4.15,-5) {Start};
+\end{tikzpicture}
+
+\subsection{Solution}
+\begingroup
+
+\newcommand\ite[3]{\mathtt{ite}(#1,#2,#3)}
+
+We introduce the variables
+
+\begin{itemize}
+\item $m = 4$ is the amount of minimum point of interests the track 'visits'
+\item $n = 6$ is the total amount of point of interests in the city
+\item $a = 7$ is the minimum amount of corners
+\item $b = 24$ is the maximum amount of corners
+\item $l = 1500m$ is the minimum length of the track
+\item $k = 6000m$ is the maximum length of the track
+\item $\alpha_{v,s} \in \mathbb{B}$ representing wether the intersection is the $s^{th}$ intersection on the track.
+\item $\beta_v \in \mathbb{B}$ representing wether the intersection is a special location
+\item $\delta_{v,v'} \in \mathbb{N}$ representing the distance between $v$ and $v'$
+\item $c_{v,v'} \in \mathbb{N}$ representing the cost of the road between $v$ and $v'$
+
+\end{itemize}
+
+\subsubsection{Sets}
+\begin{itemize}
+\item The set of intersections: $V$
+\item The set of points of intertests: $S \subset V$
+\item Start and end position: $s_0 \in V$ 
+\end{itemize}
+We set the start and end position to true $\alpha_{s_0, 0} \wedge \alpha_{s_0, s}$
+
+
+A intersection cannot be in the track multiple times except $s_0$
+\[
+\bigwedge_{v \in V}(v \neq s_0 \Rightarrow \sum_{0 \leq i < s} \ite{\alpha_{v,s}}{1}{0} \leq 1)
+\]
+Intersection $s_0$ must be in the track twice
+\[
+\sum_{0 \leq i < s} \ite{\alpha_{s_0,i}}{1}{0} = 2
+\]
+the $s^{th}$ intersection is the only insertection at step $s$
+\[
+\bigwedge_{0 \leq i < s}(\sum_{v \in V} \ite{\alpha_{v,i}}{1}{0} \leq 1)
+\]
+The track visits at least $m$ special locations
+\[
+\sum_{0 \leq i < s}(\sum_{v \in V} \ite{\alpha_{v,i} \wedge \beta_v}{1}{0}) \ge m
+\]
+There are between $a$ and $b$ corners
+\[
+a \leq \sum_{2\leq i \le s}(\sum_{(v,v',v'') \in V} \ite{\alpha_{v,i-2} \wedge \alpha_{v', i-1} \wedge \alpha_{}}{1}{0}) \leq b
+\]
+
+The track length is between $k$ and $l$
+\[
+k \leq \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{\delta_{v,v'}}{0} \leq l
+\]
+
+
+Options
+Minimize cost of roads:
+\[
+Mininimze \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{c_{v,v'}}{0} 
+\]
+Minimize internal cost - each internal block has a wheight.
+For that we have assert for the internal blocks
+\[
+\bigwedge_{0 \leq i < s}(\bigvee_{(v, v')\in (V \times V)} (\alpha_{v,i-1} \wedge \alpha_{v', i} \wedge ()))b
+\]
+\[
+Mininimze \sum_{1 \leq i \leq s}\sum_{(v,v') \in (V \times V)} \ite{\alpha_{v,i-1} \wedge \alpha_{v', i}}{c_{v,v'}}{0} 
+\]
+
+
+
+\subsection{Result}
+
+\endgroup
